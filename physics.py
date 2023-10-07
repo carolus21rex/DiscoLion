@@ -22,8 +22,15 @@ commonLength = 50
 groundHeight =10
 groundThickness = 10
 tickCount = 0
+global score
 score = 0
 groundCutoff = 300
+global rectCount
+rectCount = 1
+global sqrCount
+sqrCount = 1
+global triangleCount
+triangleCount = 1
 
 # Set up the Pygame window
 screen_width, screen_height = 1024, 529
@@ -79,9 +86,13 @@ def spawn_circle(pos):
 
 # Function to spawn a triangle
 def spawn_triangle(pos):
+    global triangleCount
     if pos[1] > heightOfDropLimit:
         print("Didn't spawn shape because it was too close to the ground")
+    elif triangleCount <= 0:
+        print("Didn't spawn Triangle because you ran out of placeable triangles!")
     else:
+        triangleCount = triangleCount-1
         triangle_base = commonLength
         triangle_height = commonLength # Adjust the side length of the triangle as needed
 
@@ -118,9 +129,13 @@ def spawn_triangle(pos):
 
 # Function to spawn a rectangle
 def spawn_rectangle(pos):
+    global rectCount 
     if pos[1] > heightOfDropLimit:
         print("Didn't spawn shape because it was too close to the ground")
+    elif rectCount<= 0:
+        print("Didn't spawn Rectangle because you ran out of placeable rectangles!")
     else:
+        rectCount = rectCount - 1
         rect_width = commonLength*2
         rect_height = commonLength
 
@@ -139,9 +154,13 @@ def spawn_rectangle(pos):
         print(f"Rectangle spawned at position: {rect_body.position}")
 
 def spawn_square(pos):
+    global sqrCount
     if pos[1] > heightOfDropLimit:
         print("Didn't spawn shape because it was too close to the ground")
+    elif sqrCount <= 0:
+        print("Didn't spawn Square because you ran out of placeable squares!")
     else:
+        sqrCount = sqrCount - 1
         square_length = commonLength
         
 
@@ -161,17 +180,29 @@ def spawn_square(pos):
 
 
 def deleteRandomShape():
-    for shape in rectangles + squares + triangles:
-        random_int = random.randit(1, len(rectangles) + len(squares) + len(triangles))
-        score=score-1
-        if shape in squares:
-            squares.remove(shape)
-        elif shape in rectangles:
-            rectangles.remove(shape)
-        elif shape in triangles:
-            triangles.remove(shape)
-        shapes_to_remove.remove(shape)
-        print("Shape deleted")
+    global score
+
+    if len(rectangles) + len(squares) + len(triangles) == 0:
+        print("No shapes to delete")
+        return
+
+    # Choose a random shape
+    random_shape = random.choice(rectangles + squares + triangles)
+
+    # Remove the shape's body and shape from the Pymunk space
+    space.remove(random_shape.body, random_shape)
+
+    # Remove the shape from the respective list
+    if random_shape in rectangles:
+        rectangles.remove(random_shape)
+    elif random_shape in squares:
+        squares.remove(random_shape)
+    elif random_shape in triangles:
+        triangles.remove(random_shape)
+
+    # Update the score
+    score = len(squares) + len(rectangles) + len(triangles)
+    print(f"Shape deleted. Score: {score}")
 # Main loop
 running = True
 clock = pygame.time.Clock()
@@ -196,7 +227,8 @@ while running:
     space.step(1 / 60)
     tickCount = tickCount + 1
     seconds = (int)(tickCount/60)
-
+    #shape counters
+    
 
 
     # Clear the screen + background
@@ -218,8 +250,10 @@ while running:
     for circle in circles:
         pygame.draw.circle(screen, (0, 0, 255), (int(circle.body.position.x), int(screen_height - circle.body.position.y)), int(circle.radius))
     for rect in rectangles:
+        vertices = [rect.body.local_to_world(v) for v in rect.get_vertices()]
         # Convert vertices to screen coordinates
-        points = [(int(rect.body.position.x + point.x), int(screen_height - (rect.body.position.y + point.y))) for point in rect.get_vertices()]
+
+        points = [(int(point.x), int(screen_height - point.y)) for point in vertices]
         #Schedule rectangle for removal
         if rect.body.position.y < -100:  # Adjust the threshold as needed
             shapes_to_remove.append(rect)
@@ -245,7 +279,11 @@ while running:
             shapes_to_remove.append(sqr)
         # Draw the rectangle
         pygame.draw.polygon(screen, (0, 255, 0), points)
-
+    if triangleCount==0 and sqrCount==0 and rectCount==0:
+        deleteRandomShape()
+        rectCount = 1
+        sqrCount = 1
+        triangleCount = 1
     #Score Logic
     for shape in shapes_to_remove:
         score=score-1
@@ -262,6 +300,7 @@ while running:
     scoreLabel = myFont.render(scoreStr, score, (0,0,0))
     screen.blit(scoreLabel, (900, 40))
 
+    
 
     # Update the Pygame display
     pygame.display.flip()
