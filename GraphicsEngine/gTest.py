@@ -53,7 +53,7 @@ while running:
             y = 0
 
     # Call the buildImage function to create a composite image
-    composite_image = BI.buildImage(background, lion_path, x, y, 200, 150)
+    composite_image = BI.placeLion(background, x, y)
     # Convert the composite image to a Pygame surface
     composite_surface = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
