@@ -14,5 +14,5 @@ def placeLion(img, x, y):
 
 
 def placeGiGi(img, x, y):
-    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), x, y, 200, 300)
+    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), 800, 200, 200, 200)
     return BC.place(img, os.path.join(current_directory, 'images', 'gigi.png'), x, y, 200, 300)
