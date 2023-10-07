@@ -1,17 +1,16 @@
 import random
 import pygame
 import pymunk
-import sys
-
+from PIL import Image
 import sys
 import os
 
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
+parent_dir = os.path.abspath(os.path.join(current_dir, ""))
 sys.path.append(parent_dir)
 
-import GraphicsEngine.gMain as GE
+import gMain as GE
 
 # Initialize Pygame
 pygame.init()
@@ -32,8 +31,15 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(nameOfGame)
 
 # Background image
+current_directory = os.getcwd()
 
-bg = pygame.image.load(GE.placeLion("background.png", 300,200))
+# Load the background image
+background_path = os.path.join(current_directory, 'images', 'savana.png')
+background = Image.open(background_path)
+composite_image = GE.placeLion(background, 800, 370)
+# Convert the composite image to a Pygame surface
+bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
+
 
 # Create a Pymunk space
 space = pymunk.Space()
@@ -190,11 +196,7 @@ while running:
     tickCount = tickCount + 1
     seconds = (int)(tickCount/60)
 
-    #TEMPORARY REMOVAL OF RANDOM SHAPE EVERY 10 SECONDS
 
-    if seconds%10 == 0:
-        print("Shape should have been deleted")
-        deleteRandomShape
 
     # Clear the screen + background
     screen.fill([255, 255, 255])
