@@ -1,6 +1,17 @@
+import random
 import pygame
 import pymunk
 import sys
+
+import sys
+import os
+
+# Add the path to the parent directory (which contains GraphicsEngine) to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(parent_dir)
+
+import GraphicsEngine as GE
 
 # Initialize Pygame
 pygame.init()
@@ -140,6 +151,19 @@ def spawn_square(pos):
         squares.append(rect_shape)
         print(f"Square spawned at position: {rect_body.position}")
 
+
+def deleteRandomShape():
+    for shape in rectangles + squares + triangles:
+        random_int = random.randit(1, len(rectangles) + len(squares) + len(triangles))
+        score=score-1
+        if shape in squares:
+            squares.remove(shape)
+        elif shape in rectangles:
+            rectangles.remove(shape)
+        elif shape in triangles:
+            triangles.remove(shape)
+        shapes_to_remove.remove(shape)
+        print("Shape deleted")
 # Main loop
 running = True
 clock = pygame.time.Clock()
@@ -164,13 +188,23 @@ while running:
     space.step(1 / 60)
     tickCount = tickCount + 1
     seconds = (int)(tickCount/60)
-    # Clear the screen
+
+    #TEMPORARY REMOVAL OF RANDOM SHAPE EVERY 10 SECONDS
+
+    if seconds%10 == 0:
+        print("Shape should have been deleted")
+        deleteRandomShape
+
+    # Clear the screen + background
     screen.fill([255, 255, 255])
     screen.blit(bg, (0, 0))
+
+    #Timer drawing
     myFont = pygame.font.SysFont("Times New Roman", 18)
     timerStr = "Stopwatch: " + str(seconds)
     timerLabel = myFont.render(timerStr, seconds, (0,0,0))
     screen.blit(timerLabel, (900, 20))
+    
     # Draw the ground
     pygame.draw.line(screen, (0, 0, 0), (groundCutoff, screen_height - groundHeight), (screen_width-groundCutoff, screen_height- groundHeight), groundThickness)
     # Draw drop limit
