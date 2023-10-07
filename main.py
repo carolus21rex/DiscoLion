@@ -1,5 +1,6 @@
 import arcade
 
+# hello
 class MainMenu(arcade.View):
     def on_show_view(self):
         arcade.start_render()
