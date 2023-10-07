@@ -122,7 +122,7 @@ def display_pick_options(options_csv):
 
 
 # %%
-def get_user_input(options_csv, random_number):
+def get_user_input(options_csv):
     """
     Get user input and repeatedly prompt until valid input is provided.
 
@@ -165,7 +165,7 @@ def Gigi_Attack_Number_Recognition(lowest=0, highest=9):
     display_pick_options(options_csv)
 
     # Get player input
-    picked_number = get_user_input(options_csv, target_number)
+    picked_number = get_user_input(options_csv)
 
     # Determine win/losss
     win = picked_number == target_number
@@ -206,7 +206,7 @@ def Gigi_Attack_Counting(lowest=0, highest=20):
     display_pick_options(options_csv)
 
     # Get player input
-    picked_number = get_user_input(options_csv, target_number)
+    picked_number = get_user_input(options_csv)
 
     # Determine win/losss
     win = picked_number == target_number
@@ -230,9 +230,26 @@ def Gigi_Attack_Counting(lowest=0, highest=20):
 #     result = Gigi_Attack_Number_Recognition()
 
 # %%
+def display_addition_puzzle(addend1, addend2):
+    """
+    Display the addition puzzle to the user.
+
+    Args:
+        target_number (int): The target number for the puzzle.
+        num1 (int): The first random number.
+        num2 (int): The second random number.
+    """
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    print(f"{addend1} + {addend2} = ")
+    engine.say(f"{addend1} plus {addend2} is?")
+    engine.runAndWait()
+
+# %%
 import pyttsx3
 
-def Gigi_Attack_Add(lowest=0, highest=20):
+def Gigi_Attack_Add(lowest=0, highest=10):
     """
     Gigi Attack - Addition game.
     """
@@ -244,13 +261,13 @@ def Gigi_Attack_Add(lowest=0, highest=20):
     addend2 = target_number - addend1
 
     # Display Addition Formula
-    display_addition_puzzle(target_number, addend1, addend2)
+    display_addition_puzzle(addend1, addend2)
 
     # Display Pick Options
     display_pick_options(options_csv)
 
     # Get player input
-    picked_number = get_user_input(options_csv, target_number)
+    picked_number = get_user_input(options_csv)
 
     # Determine win/losss
     win = picked_number == target_number
@@ -274,9 +291,11 @@ def Gigi_Attack_Add(lowest=0, highest=20):
 #     result = Gigi_Attack_Number_Recognition()
 
 # %%
-def display_addition_puzzle(target_number, addend1, addend2):
+import pyttsx3
+
+def display_subtraction_puzzle(target_number, num1, num2):
     """
-    Display the addition puzzle to the user.
+    Display the subtraction puzzle to the user.
 
     Args:
         target_number (int): The target number for the puzzle.
@@ -286,18 +305,63 @@ def display_addition_puzzle(target_number, addend1, addend2):
     # Initialize the text-to-speech engine
     engine = pyttsx3.init()
 
-    print(f"{addend1} + {addend2} = ")
-    engine.say(f"{addend1} plus {addend2} is?")
+    print(f"{num1} - {num2} = ")
+    engine.say(f"{num1} minus {num2} is?")
     engine.runAndWait()
 
+
 # %%
+def Gigi_Attack_Subtract(lowest=0, highest=10):
+    """
+    Gigi Attack - Subtraction game.
+    """
+    # Set up target number and options list
+    target_number, options_csv = setup_target_number_and_list(lowest,highest)
+
+    # Generate splits such that num2 - num 1 = target number with num1 > target_number
+    num1 = random.randint(target_number, highest)
+    num2 = num1 - target_number
+
+    # Display the puzzle
+    display_subtraction_puzzle(target_number, num1, num2)
+
+    # Display Pick Options
+    display_pick_options(options_csv)
+
+    # Get player input
+    picked_number = get_user_input(options_csv)
+
+    # Determine win/loss
+    win = picked_number == target_number
+
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    # Announce the result
+    if win:
+        engine.say("Yay, you got it! Roar!")
+    else:
+        engine.say(f"Oh no! {num1} minus {num2} is {target_number}.")
+
+    engine.runAndWait()
+
+    # Return
+    return win
+
+
+# %%
+#Test calls
+
 #win = Gigi_Attack_Number_Recognition()
+#win = Gigi_Attack_Counting()
+#win = Gigi_Attack_Add(0,15)
+#win = Gigi_Attack_Subtract(0,15)
+
 #print(win)
 
 # %%
-#win = Gigi_Attack_Counting()
+# Math Game Selection Engine
 
-# %%
-#win = Gigi_Attack_Add()
+
 
 
