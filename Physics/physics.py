@@ -11,7 +11,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.append(parent_dir)
 
-import GraphicsEngine as GE
+import GraphicsEngine.gMain as GE
 
 # Initialize Pygame
 pygame.init()
@@ -32,7 +32,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(nameOfGame)
 
 # Background image
-bg = pygame.image.load("background.png")
+
+bg = pygame.image.load(GE.placeLion("background.png", 300,200))
 
 # Create a Pymunk space
 space = pymunk.Space()
