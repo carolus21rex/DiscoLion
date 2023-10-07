@@ -1,6 +1,16 @@
+import random
 import pygame
 import pymunk
+from PIL import Image
 import sys
+import os
+
+# Add the path to the parent directory (which contains GraphicsEngine) to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, ""))
+sys.path.append(parent_dir)
+
+import gMain as GE
 
 # Initialize Pygame
 pygame.init()
@@ -13,6 +23,7 @@ groundHeight =10
 groundThickness = 10
 tickCount = 0
 score = 0
+groundCutoff = 300
 
 # Set up the Pygame window
 screen_width, screen_height = 1024, 529
@@ -20,7 +31,16 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(nameOfGame)
 
 # Background image
-bg = pygame.image.load("background.png")
+current_directory = os.getcwd()
+
+# Load the background image
+background_path = os.path.join(current_directory, 'images', 'savana.png')
+background = Image.open(background_path)
+composite_image = GE.placeLion(background, 800, 370)
+composite_image = GE.placeGiGi(composite_image, 50, 270)
+# Convert the composite image to a Pygame surface
+bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
+
 
 # Create a Pymunk space
 space = pymunk.Space()
@@ -29,7 +49,7 @@ space.gravity = (0, -100)  # Set gravity
 # Create a ground segment
 ground_body = pymunk.Body(body_type=pymunk.Body.STATIC)
 
-ground_segment = pymunk.Segment(ground_body, (0, groundHeight), (screen_width, groundHeight), groundThickness)
+ground_segment = pymunk.Segment(ground_body, (groundCutoff, groundHeight), (screen_width-groundCutoff, groundHeight), groundThickness)
 ground_segment.friction = 1
 ground_body.friction = 1
 space.add(ground_body, ground_segment)  # Add the ground body and segment to the space
@@ -38,7 +58,8 @@ space.add(ground_body, ground_segment)  # Add the ground body and segment to the
 circles = []
 rectangles = []
 triangles = []
-squares =[]
+squares = []
+shapes_to_remove = []
 
 # Function to spawn a circle
 def spawn_circle(pos): 
@@ -138,6 +159,19 @@ def spawn_square(pos):
         squares.append(rect_shape)
         print(f"Square spawned at position: {rect_body.position}")
 
+
+def deleteRandomShape():
+    for shape in rectangles + squares + triangles:
+        random_int = random.randit(1, len(rectangles) + len(squares) + len(triangles))
+        score=score-1
+        if shape in squares:
+            squares.remove(shape)
+        elif shape in rectangles:
+            rectangles.remove(shape)
+        elif shape in triangles:
+            triangles.remove(shape)
+        shapes_to_remove.remove(shape)
+        print("Shape deleted")
 # Main loop
 running = True
 clock = pygame.time.Clock()
@@ -162,15 +196,21 @@ while running:
     space.step(1 / 60)
     tickCount = tickCount + 1
     seconds = (int)(tickCount/60)
-    # Clear the screen
+
+
+
+    # Clear the screen + background
     screen.fill([255, 255, 255])
     screen.blit(bg, (0, 0))
+
+    #Timer drawing
     myFont = pygame.font.SysFont("Times New Roman", 18)
     timerStr = "Stopwatch: " + str(seconds)
     timerLabel = myFont.render(timerStr, seconds, (0,0,0))
     screen.blit(timerLabel, (900, 20))
+    
     # Draw the ground
-    pygame.draw.line(screen, (0, 0, 0), (0, screen_height - groundHeight), (screen_width, screen_height- groundHeight), groundThickness)
+    pygame.draw.line(screen, (0, 0, 0), (groundCutoff, screen_height - groundHeight), (screen_width-groundCutoff, screen_height- groundHeight), groundThickness)
     # Draw drop limit
     pygame.draw.line(screen, (255, 0, 0), (0, heightOfDropLimit), (screen_width, heightOfDropLimit), 3)
 
@@ -180,14 +220,18 @@ while running:
     for rect in rectangles:
         # Convert vertices to screen coordinates
         points = [(int(rect.body.position.x + point.x), int(screen_height - (rect.body.position.y + point.y))) for point in rect.get_vertices()]
-
+        #Schedule rectangle for removal
+        if rect.body.position.y < -100:  # Adjust the threshold as needed
+            shapes_to_remove.append(rect)
         # Draw the rectangle
         pygame.draw.polygon(screen, (0, 0, 255), points)
 
     for triangle in triangles:
         # Get the vertices in world coordinates
         vertices = [triangle.body.local_to_world(v) for v in triangle.get_vertices()]
-
+        #Schedule triangle for removal
+        if triangle.body.position.y < -100:  # Adjust the threshold as needed
+            shapes_to_remove.append(triangle)
         # Convert world coordinates to screen coordinates
         points = [(int(point.x), int(screen_height - point.y)) for point in vertices]
 
@@ -196,9 +240,28 @@ while running:
     for sqr in squares:
         # Convert vertices to screen coordinates
         points = [(int(sqr.body.position.x + point.x), int(screen_height - (sqr.body.position.y + point.y))) for point in sqr.get_vertices()]
-
+        #Schedule Square to be deleted
+        if sqr.body.position.y < -100:  # Adjust the threshold as needed
+            shapes_to_remove.append(sqr)
         # Draw the rectangle
-        pygame.draw.polygon(screen, (0, 255, 0), points)    
+        pygame.draw.polygon(screen, (0, 255, 0), points)
+
+    #Score Logic
+    for shape in shapes_to_remove:
+        score=score-1
+        if shape in squares:
+            squares.remove(shape)
+        elif shape in rectangles:
+            rectangles.remove(shape)
+        elif shape in triangles:
+            triangles.remove(shape)
+        shapes_to_remove.remove(shape)
+        
+    score = len(squares) + len(rectangles) + len(triangles)
+    scoreStr = "Score: " + str(score)
+    scoreLabel = myFont.render(scoreStr, score, (0,0,0))
+    screen.blit(scoreLabel, (900, 40))
+
 
     # Update the Pygame display
     pygame.display.flip()

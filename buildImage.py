@@ -1,5 +1,6 @@
 from PIL import Image
 
+
 def buildImage(background, overlay_path, x, y, xsize, ysize):
     # Open the background image and overlay image
     overlay = Image.open(overlay_path)
