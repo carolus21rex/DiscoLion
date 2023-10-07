@@ -207,6 +207,8 @@ while running:
             shapes_to_remove.append(sqr)
         # Draw the rectangle
         pygame.draw.polygon(screen, (0, 255, 0), points)
+
+    #Score Logic
     for shape in shapes_to_remove:
         score=score-1
         if shape in squares:
@@ -217,11 +219,12 @@ while running:
             triangles.remove(shape)
         shapes_to_remove.remove(shape)
         
-    print(squares)
     score = len(squares) + len(rectangles) + len(triangles)
     scoreStr = "Score: " + str(score)
     scoreLabel = myFont.render(scoreStr, score, (0,0,0))
     screen.blit(scoreLabel, (900, 40))
+
+
     # Update the Pygame display
     pygame.display.flip()
     clock.tick(60)
