@@ -11,6 +11,14 @@ sys.path.append(parent_dir)
 
 import gMain as GE
 
+class Person:
+    def __init__(self, name, score): 
+        self.name = name
+        self.score = score
+
+    def display(self):
+        print(f"Name: {self.name}, Score: {self.score}")
+
 def main():
     # Initialize Pygame
     pygame.init()
@@ -21,9 +29,13 @@ def main():
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
 
+
     # Create the window
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("DISCO LION")
+
+    # Create a linked list to store names
+    
 
     # Create a flag to keep track of the current screen
     current_screen = "main"
@@ -36,8 +48,8 @@ def main():
     quitText = "QUIT"
 
     # Main game loop
-    running = True
-    while running:
+    runningTwo = True
+    while runningTwo:
  
         # Clear the screen
         screen.fill(WHITE)
@@ -94,7 +106,7 @@ def main():
                             print("SETTINGS")
                             current_screen = "settings"
                         elif quitRect.collidepoint(event.pos):
-                            running = False
+                            runningTwo = False
 
         # Back button dimensions
         rectWidth = 100
@@ -114,9 +126,31 @@ def main():
 
             # Draws the back button
             pygame.draw.rect(screen, (0, 0, 0), ())
-            
+        elif current_screen == "leaderboard":
+            pass
         elif current_screen == "game":
             screen.fill(WHITE)
+
+            # Ask for user name
+            nameText = "Type your name: "
+            nameSurface = font.render(settingsText, True, (0,0,0))
+            nameRect = nameSurface.get_rect()
+            nameRect.center = (WIDTH // 2, 350)
+            screen.blit(nameSurface, nameRect)
+
+            runningThree = True
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        user_name = input_text
+                        input_text = ""
+                        
+            
+
+            screen.fill(WHITE)
+
             # Game Variables
             nameOfGame = "Disco Lion Game"
             heightOfDropLimit = 200
@@ -313,6 +347,15 @@ def main():
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
+                    elif score>=20:
+                        print("You won in ", seconds)
+                        running = False
+                        current_screen = "main"
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        if leaveRect.collidepoint(event.pos):
+                            print("LEAVE")
+                            current_screen = "main"
+                            running = False
                     elif event.type == pygame.KEYDOWN:
                         #if event.key == pygame.K_c:  # Press 'C' to spawn a circle
                         #    spawn_circle(pygame.mouse.get_pos())
@@ -342,7 +385,11 @@ def main():
                 timerStr = "Stopwatch: " + str(seconds)
                 timerLabel = myFont.render(timerStr, seconds, (0,0,0))
                 screen.blit(timerLabel, (900, 20))
-                
+                #Draw leave button
+                leaveSurface = font.render("LEAVE", True, (0,0,0))
+                leaveRect = leaveSurface.get_rect()
+                leaveRect.center = (50, 25)
+                screen.blit(leaveSurface, leaveRect)
                 # Draw the ground
                 pygame.draw.line(screen, (0, 0, 0), (groundCutoff, screen_height - groundHeight), (screen_width-groundCutoff, screen_height- groundHeight), groundThickness)
                 # Draw drop limit
@@ -382,10 +429,16 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
-                    deleteRandomShape()
+                    #Gigi movement
+                    for i in range(50):
+                        pygame.time.wait(10)
+                        print("wait")
+                        composite_image = GE.placeGiGi(composite_image, 50+i, 270)
                     rectCount = 1
                     sqrCount = 1
                     triangleCount = 1
+                    #for i in range(50):
+                        
                 #Score Logic
                 for shape in shapes_to_remove:
                     score=score-1
