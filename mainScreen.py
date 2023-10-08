@@ -79,6 +79,8 @@ def main():
     gigiMove = -1
     gigiDict = None
     lastTime = time.time_ns()
+    quizX = 0
+    quizY = 0
     
 
     # Create a flag to keep track of the current screen
@@ -395,8 +397,8 @@ def main():
                             current_screen = "main"
                             running = False
                         elif current_screen == "game":
-                            x, y = event.pos
-                            coordinates_text = f"Clicked at ({x}, {y})"
+                            quizX, quizY = event.pos
+                            coordinates_text = f"Clicked at ({quizX}, {quizY})"
                             print(coordinates_text)
                     elif event.type == pygame.KEYDOWN:
                         #if event.key == pygame.K_c:  # Press 'C' to spawn a circle
