@@ -414,7 +414,7 @@ def main():
                 background_path = os.path.join(current_directory, 'images', 'savana.png')
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
-                composite_image = GE.placeGiGi(composite_image, gigiIndex - 100, 270)
+                composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
