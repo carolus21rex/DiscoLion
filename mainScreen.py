@@ -5,6 +5,7 @@ import sys
 import os
 import random
 import time
+import  optionsParser as OP
 
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -75,6 +76,7 @@ def main():
     gigiMove = -1
     gigiDict = None
     lastTime = time.time_ns()
+    lastTime2 = time.time_ns()
     quizX = 0
     quizY = 0
     
@@ -388,6 +390,7 @@ def main():
                         elif current_screen == "game":
                             quizX, quizY = event.pos
                             coordinates_text = f"Clicked at ({quizX}, {quizY})"
+                            lastTime = time.time_ns()
                             print(coordinates_text)
                     elif event.type == pygame.KEYDOWN:
                         #if event.key == pygame.K_c:  # Press 'C' to spawn a circle
@@ -416,10 +419,22 @@ def main():
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
                 if gigiMove == 2:
                     composite_image = GE.question(composite_image, gigiDict['Question'])
-                    if gigiDict["Type"] != "Counting":
+                    if gigiDict["Type"] != "Count":
                         composite_image = GE.answers(composite_image, gigiDict['Options'])
                     else:
                         print("everybody died. the end.")
+                        gigiMove = 0
+                if lastTime > lastTime2 and gigiMove == 2:
+                    if 135 <= quizY <= 190:
+                        index = int((quizX-565)/50)
+                        print(index)
+                        if 0 <= index < 4:
+                            gigiDict["Selection"] = OP.answers(gigiDict["Options"])[index]
+                            a = GG.Puzzle_Result(gigiDict)
+                            print(a)
+                            if not a:
+                                deleteRandomShape()
+                            gigiMove = -1
 
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
@@ -527,11 +542,11 @@ def main():
                     gigiDict = GG.Gigi_Event()
 
                     # do quiz
-
+                    lastTime2 = time.time_ns()
                     gigiMove = 2
                 if gigiMove == -1:
                     if gigiIndex > 0:
-                        gigiIndex += 1
+                        gigiIndex -= 1
                     else:
                         gigiMove = -2
 
