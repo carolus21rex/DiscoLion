@@ -459,9 +459,10 @@ def main():
                     # Draw the triangle
                     pygame.draw.polygon(screen, (255, 0, 0), points)
                 for sqr in squares:
+                    vertices = [sqr.body.local_to_world(v) for v in sqr.get_vertices()]
                     # Convert vertices to screen coordinates
-                    points = [(int(sqr.body.position.x + point.x), int(screen_height - (sqr.body.position.y + point.y))) for point in sqr.get_vertices()]
-                    #Schedule Square to be deleted
+
+                    points = [(int(point.x), int(screen_height - point.y)) for point in vertices]
                     if sqr.body.position.y < -100:  # Adjust the threshold as needed
                         shapes_to_remove.append(sqr)
                     # Draw the rectangle
