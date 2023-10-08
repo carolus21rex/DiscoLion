@@ -160,6 +160,8 @@ def Puzzle_Result(puzzle_info):
     if len(scores) > 10:
         scores.pop(0)  # Remove the oldest score
 
+    return is_correct
+
 # %%
 import random
 
