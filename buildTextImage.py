@@ -26,5 +26,4 @@ def text_to_png(text):
 
     # Add the text to the image
     draw.text((x, y), text, fill=text_color, font=font)
-
     return img

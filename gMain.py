@@ -20,4 +20,4 @@ def placeGiGi(img, x, y):
     return BC.place(img, os.path.join(current_directory, 'images', 'gigi.png'), x, y, 200, 300)
 
 def question(img, question):
-    return BC.place(img, BTI.text_to_png(question), 150, 300, 400, 200)
+    return BC.place(img, BTI.text_to_png(question), 50, 00, 400, 200)
