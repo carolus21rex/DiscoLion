@@ -5,6 +5,7 @@ import sys
 import os
 import random
 import time
+
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ""))
@@ -12,6 +13,7 @@ sys.path.append(parent_dir)
 
 
 import gMain as GE
+import Giraffe_Attacks as GG
 
 class Person:
     def __init__(self, name, score): 
@@ -468,17 +470,14 @@ def main():
                 # Gigi move
                 if gigiMove == 1:
                     if gigiIndex < 200:
-                        if lastTime <= time.time_ns() + 50000000:
-                            lastTime = time.time_ns()
-                            gigiIndex += 1
+                        gigiIndex += 1
                 if gigiMove == 0:
+
                     # do quiz
                     print("bob")
                 if gigiMove == -1:
                     if gigiIndex > 0:
-                        if lastTime <= time.time_ns() + 50000000:
-                            lastTime = time.time_ns()
-                            gigiIndex += 1
+                        gigiIndex += 1
 
                 #Score Logic
                 for shape in shapes_to_remove:
