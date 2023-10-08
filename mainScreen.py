@@ -70,6 +70,7 @@ def main():
     user_name = ""
     input_text = ""
     leaderboardList = LimitSize(3)
+    player = Person(user_name, 0)
     
     # GiGi's Variables
     gigiIndex = 0
@@ -161,6 +162,17 @@ def main():
             leaveLeaderRect = leaveLeaderSurface.get_rect()
             leaveLeaderRect.center = (50, 25)
             screen.blit(leaveLeaderSurface, leaveLeaderRect)
+
+            items = leaderboardList.get_items()
+            for person in items:
+                playerNameSurface = font.render(f"{person.name}", True, (0,0,0))
+                playerNameRect = playerNameSurface.get_rect()
+                playerNameRect.center(50, 25)
+                screen.blit(playerNameSurface, playerNameRect)
+
+                playerScoreSurface = font.rend
+            # Draw leader board
+            player1NameSurface = font.render()
                         
         elif current_screen == "name":
             screen.fill(WHITE)
@@ -598,7 +610,7 @@ def main():
                  if current_screen == "name":
                     if event.key == pygame.K_RETURN:
                         user_name = input_text
-                        
+                        player.name = user_name
                         input_text = ""
                         current_screen = "game"
                     elif event.key == pygame.K_BACKSPACE:
