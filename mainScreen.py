@@ -538,10 +538,10 @@ def main():
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
                 elif current_screen == "leaderboard":
-                    if leaveSettingsRect.collidepoint(event.pos):
+                    if leaveLeaderRect.collidepoint(event.pos):
                         current_screen = "main"
                 elif current_screen == "settings":
-                    if leaveLeaderRect.collidepoint(event.pos):
+                    if leaveSettingsRect.collidepoint(event.pos):
                         current_screen = "main"
             elif event.type == pygame.KEYDOWN:
                  if current_screen == "name":
