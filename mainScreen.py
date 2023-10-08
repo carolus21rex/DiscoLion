@@ -109,7 +109,7 @@ def main():
                             current_screen = "leaderboard"
                         elif startRect.collidepoint(event.pos):
                             print("START")
-                            current_screen = "game"
+                            current_screen = "name"
                         elif settingsRect.collidepoint(event.pos):
                             print("SETTINGS")
                             current_screen = "settings"
@@ -166,7 +166,14 @@ def main():
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if leaveLeaderRect.collidepoint(event.pos):
                         current_screen = "main"
+                        
         elif current_screen == "name":
+            screen.fill(WHITE)
+
+            screen.fill(LIGHT_BLUE)
+
+            pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
+
             # Ask for user name
             nameText = "Type your name: "
             nameSurface = font.render(settingsText, True, (0,0,0))
@@ -184,6 +191,7 @@ def main():
                         input_text = input_text[:-1]
                     else:
                         input_text += event.unicode
+
         elif current_screen == "game":
             screen.fill(WHITE)
 
@@ -208,8 +216,6 @@ def main():
             screen_width, screen_height = 1024, 529
             screen = pygame.display.set_mode((screen_width, screen_height))
             pygame.display.set_caption(nameOfGame)
-
-
 
 
             # Create a Pymunk space
