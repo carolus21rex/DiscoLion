@@ -44,6 +44,7 @@ def main():
     # GiGi's Variables
     gigiIndex = 0
     gigiMove = 1
+    gigiDict = 0
     lastTime = time.time_ns()
     
 
@@ -398,6 +399,9 @@ def main():
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
+                if dict["Question"] is not None:
+                    composite_image = GE.question(composite_image, dict["Question"])
+
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
@@ -472,9 +476,11 @@ def main():
                     if gigiIndex < 200:
                         gigiIndex += 1
                 if gigiMove == 0:
+                    gigiDict = GG.Gigi_Event()
 
                     # do quiz
-                    print("bob")
+
+                    gigiMove = 2
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         gigiIndex += 1
