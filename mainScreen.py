@@ -35,6 +35,7 @@ def main():
     pygame.display.set_caption("DISCO LION")
 
     # Create a linked list to store names
+    input_text = ""
     
 
     # Create a flag to keep track of the current screen
@@ -108,6 +109,7 @@ def main():
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
 
+
         # Back button dimensions
         rectWidth = 100
         rectHeight = 100
@@ -124,10 +126,40 @@ def main():
             # Draws the rectangle to the screen
             pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
 
-            # Draws the back button
-            pygame.draw.rect(screen, (0, 0, 0), ())
+            #Draw leave button
+            leaveSettingsSurface = font.render("LEAVE", True, (0,0,0))
+            leaveSettingsRect = leaveSettingsSurface.get_rect()
+            leaveSettingsRect.center = (50, 25)
+            screen.blit(leaveSettingsSurface, leaveSettingsRect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if leaveSettingsRect.collidepoint(event.pos):
+                        current_screen = "main"
+
+
         elif current_screen == "leaderboard":
-            pass
+            screen.fill(WHITE)
+
+            screen.fill(LIGHT_BLUE)
+
+            pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
+
+            #Draw leave button
+            leaveLeaderSurface = font.render("LEAVE", True, (0,0,0))
+            leaveLeaderRect = leaveLeaderSurface.get_rect()
+            leaveLeaderRect.center = (50, 25)
+            screen.blit(leaveLeaderSurface, leaveLeaderRect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if leaveLeaderRect.collidepoint(event.pos):
+                        current_screen = "main"
+
         elif current_screen == "game":
             screen.fill(WHITE)
 
@@ -138,14 +170,18 @@ def main():
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
 
-            runningThree = True
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        user_name = input_text
-                        input_text = ""
+            # runningThree = True
+            # for event in pygame.event.get():
+            #     if event.type == pygame.KEYDOWN:
+            #         if event.key == pygame.K_RETURN:
+            #             user_name = input_text
+            #             input_text = ""
+            #             current_screen = "main"
+            #         elif event.key == pygame.K_BACKSPACE:
+            #             input_text = input_text[:-1]
+            #         else:
+            #             input_text += event.unicode
+                        
                         
             
 
@@ -429,12 +465,9 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
-                    pygame.time.wait(10)
                     #Gigi movement
                     for i in range(50):
-                        pygame.time.wait(10)
-                        print("wait")
-                        composite_image = GE.placeGiGi(composite_image, 50+i, 270)
+                        composite_image = GE.placeGiGi(composite_image, 50+(i*7), 270)
                     rectCount = 1
                     sqrCount = 1
                     triangleCount = 1
