@@ -269,7 +269,7 @@ def Gigi_Attack_Add(lowest=0, highest=10):
     # Get player input
     picked_number = get_user_input(options_csv)
 
-    # Determine win/losss
+    # Determine win/loss
     win = picked_number == target_number
 
     # Initialize the text-to-speech engine
