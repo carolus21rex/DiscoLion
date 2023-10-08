@@ -162,7 +162,7 @@ def Puzzle_Result(puzzle_info):
 
     return is_correct
 
-# %%
+
 import random
 
 def select_puzzle_type():

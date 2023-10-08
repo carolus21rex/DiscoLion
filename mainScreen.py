@@ -422,7 +422,7 @@ def main():
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
                 if gigiMove == 2:
                     composite_image = GE.question(composite_image, gigiDict['Question'])
-                    if gigiDict["Type"] != "Counting":
+                    if gigiDict["Type"] != "Count":
                         composite_image = GE.answers(composite_image, gigiDict['Options'])
                     else:
                         print("everybody died. the end.")
