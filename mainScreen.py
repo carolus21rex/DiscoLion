@@ -115,6 +115,13 @@ def main():
             leaveSettingsRect.center = (50, 25)
             screen.blit(leaveSettingsSurface, leaveSettingsRect)
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    runningTwo = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if leaveSettingsRect.collidepoint(event.pos):
+                        current_screen = "main"
+
         elif current_screen == "leaderboard":
             screen.fill(WHITE)
 
@@ -128,7 +135,6 @@ def main():
             leaveLeaderRect.center = (50, 25)
             screen.blit(leaveLeaderSurface, leaveLeaderRect)
 
-            # MOVE TO EVENT CHECKER
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     runningTwo = False
@@ -152,7 +158,7 @@ def main():
 
             inputSurface = font.render(input_text, True, (0,0,0))
             inputRect = inputSurface.get_rect()
-            inputRect.center = (WIDTH // 2, 350)
+            inputRect.center = (WIDTH // 1.5, 350)
             screen.blit(inputSurface, inputRect)
 
             # MOVE TO EVENT CHECKER
@@ -385,7 +391,7 @@ def main():
                             spawn_square(pygame.mouse.get_pos())
 
                 # Update Pymunk space
-                space.step(1 / 120)
+                space.step(1 / 30)
                 tickCount = tickCount + 1
                 seconds = (int)(tickCount/30)
                 #shape counters
@@ -519,9 +525,12 @@ def main():
                             current_screen = "settings"
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
-                elif current_screen == "leaderboard":
-                    if leaveSettingsRect.collidepoint(event.pos):
-                        current_screen = "main"
+                # elif current_screen == "leaderboard":
+                #     if leaveSettingsRect.collidepoint(event.pos):
+                #         current_screen = "main"
+                # elif current_screen == "settings":
+                #     if leaveLeaderRect.collidepoint(event.pos):
+                #         current_screen = "main"
                         
 
 
