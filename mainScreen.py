@@ -100,7 +100,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                runningTwo= False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if current_screen == "main":
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -162,14 +162,11 @@ def main():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    runningTwo = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if leaveLeaderRect.collidepoint(event.pos):
                         current_screen = "main"
-
-        elif current_screen == "game":
-            screen.fill(WHITE)
-
+        elif current_screen == "name":
             # Ask for user name
             nameText = "Type your name: "
             nameSurface = font.render(settingsText, True, (0,0,0))
@@ -177,21 +174,17 @@ def main():
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
 
-            # runningThree = True
-            # for event in pygame.event.get():
-            #     if event.type == pygame.KEYDOWN:
-            #         if event.key == pygame.K_RETURN:
-            #             user_name = input_text
-            #             input_text = ""
-            #             current_screen = "main"
-            #         elif event.key == pygame.K_BACKSPACE:
-            #             input_text = input_text[:-1]
-            #         else:
-            #             input_text += event.unicode
-                        
-                        
-            
-
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        user_name = input_text
+                        input_text = ""
+                        current_screen = "game"
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_text = input_text[:-1]
+                    else:
+                        input_text += event.unicode
+        elif current_screen == "game":
             screen.fill(WHITE)
 
             # Game Variables
@@ -415,7 +408,7 @@ def main():
                 background_path = os.path.join(current_directory, 'images', 'savana.png')
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
-                composite_image = GE.placeGiGi(composite_image, gigiIndex - 100, 270)
+                composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
