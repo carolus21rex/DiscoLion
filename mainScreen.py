@@ -5,6 +5,7 @@ import sys
 import os
 import random
 import time
+
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ""))
@@ -12,6 +13,7 @@ sys.path.append(parent_dir)
 
 
 import gMain as GE
+import Giraffe_Attacks as GG
 
 class Person:
     def __init__(self, name, score): 
@@ -109,7 +111,7 @@ def main():
                             current_screen = "leaderboard"
                         elif startRect.collidepoint(event.pos):
                             print("START")
-                            current_screen = "game"
+                            current_screen = "name"
                         elif settingsRect.collidepoint(event.pos):
                             print("SETTINGS")
                             current_screen = "settings"
@@ -166,7 +168,14 @@ def main():
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if leaveLeaderRect.collidepoint(event.pos):
                         current_screen = "main"
+                        
         elif current_screen == "name":
+            screen.fill(WHITE)
+
+            screen.fill(LIGHT_BLUE)
+
+            pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
+
             # Ask for user name
             nameText = "Type your name: "
             nameSurface = font.render(settingsText, True, (0,0,0))
@@ -184,6 +193,7 @@ def main():
                         input_text = input_text[:-1]
                     else:
                         input_text += event.unicode
+
         elif current_screen == "game":
             screen.fill(WHITE)
 
@@ -208,8 +218,6 @@ def main():
             screen_width, screen_height = 1024, 529
             screen = pygame.display.set_mode((screen_width, screen_height))
             pygame.display.set_caption(nameOfGame)
-
-
 
 
             # Create a Pymunk space
@@ -481,17 +489,14 @@ def main():
                 # Gigi move
                 if gigiMove == 1:
                     if gigiIndex < 200:
-                        if lastTime <= time.time_ns() + 50000000:
-                            lastTime = time.time_ns()
-                            gigiIndex += 1
+                        gigiIndex += 1
                 if gigiMove == 0:
+
                     # do quiz
                     print("bob")
                 if gigiMove == -1:
                     if gigiIndex > 0:
-                        if lastTime <= time.time_ns() + 50000000:
-                            lastTime = time.time_ns()
-                            gigiIndex += 1
+                        gigiIndex += 1
 
                 #Score Logic
                 for shape in shapes_to_remove:
