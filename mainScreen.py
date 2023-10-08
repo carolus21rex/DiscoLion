@@ -35,17 +35,15 @@ class LimitSize:
 
     def append(self, Person):
         if len(self.items) >= self.max_size:
-            for i, existing_person in enumerate(self.items):
-                if Person.score > existing_person.score:
-                    self.items[i] = Person
-                    break
-                else:
-                    return
+            lowest_person = min(self.items, key = lambda x: x.score)
+            if Person.score > lowest_person.score:
+                self.items[2] = Person
+            else:
+                return
         else:
             self.items.append(Person)
             
         self.items.sort(key = lambda x: x.score, reverse = True)
-
 
     def get_items(self):
         return self.items
@@ -80,7 +78,6 @@ def main():
     quizX = 0
     quizY = 0
     
-
     # Create a flag to keep track of the current screen
     current_screen = "main"
 
@@ -444,7 +441,7 @@ def main():
                 screen.blit(leaveSurface, leaveRect)
 
                 #rectangle counter
-                rectCounterX = 750
+                rectCounterX = 400
                 rectCounterY = 25
                 
                 pygame.draw.rect(screen, (0,0,255), (rectCounterX, rectCounterY, commonLength*2, commonLength))
@@ -453,14 +450,14 @@ def main():
                 counterRect.center = (rectCounterX+commonLength, rectCounterY+(commonLength+25))
                 screen.blit(rectCounterSurface, counterRect)
                 #square counter
-                sqrCounterX = 700
+                sqrCounterX = 350
                 sqrCounterY = 25
                 pygame.draw.rect(screen, (0,255,0), (sqrCounterX, sqrCounterY, commonLength, commonLength))
                 sqrCounterSurface = font.render(str(sqrCount), True, (0,0,0))
                 counterSqr = sqrCounterSurface.get_rect()
                 counterSqr.center = (sqrCounterX+25, sqrCounterY+(commonLength+25))
                 screen.blit(sqrCounterSurface, counterSqr)
-                triX = 650
+                triX = 300
                 triY = 75
                 pygame.draw.polygon(screen, (255,0,0), ((triX,triY), (triX+commonLength,triY), (triX,triY-commonLength)))
                 triCounterSurface = font.render(str(triangleCount), True, (0,0,0))
@@ -586,26 +583,16 @@ def main():
                  if current_screen == "name":
                     if event.key == pygame.K_RETURN:
                         user_name = input_text
+                        
                         input_text = ""
                         current_screen = "game"
                     elif event.key == pygame.K_BACKSPACE:
                         input_text = input_text[:-1]
                     else:
                         input_text += event.unicode
-
-                    
-        new_person = Person(user_name, 0)
-        leaderboardList.append(new_person)
-        new_person.reset()
-        
-        
-        
-        
               
                         
-
-
-                            
+      
 
         pygame.display.flip()
 
