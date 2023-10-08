@@ -153,9 +153,8 @@ def Gigi_Event():
     quiz_types = ['Number', 'Count', 'Add', 'Subtract']
 
     # Randomly choose a quiz type
-    # quiz_type = random.choice(quiz_types)
-
-    quiz_type = select_puzzle_type() # Advanced version
+    quiz_type = random.choice(quiz_types) # Basic random version
+    # quiz_type = select_puzzle_type() # Advanced logic version
 
     # Call the respective puzzle function based on the chosen quiz type
     if quiz_type == "Number":
