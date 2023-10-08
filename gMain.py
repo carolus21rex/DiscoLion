@@ -16,9 +16,10 @@ def placeLion(img, x, y):
 
 
 def placeGiGi(img, x, y):
-    q = min(180, x)
-    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), int(1100 * q / 30) - 300, 200, 200, 200)
-    return BC.place(img, os.path.join(current_directory, 'images', 'gigi.png'), x, y, 200, 300)
+    q = min(100, x)
+    q += 100
+    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), int(1100 * q / 15) - 300, 200, 200, 200)
+    return BC.place(img, os.path.join(current_directory, 'images', 'gigi.png'), 3 * (200+x) - 400, y, 200, 300)
 
 def question(img, question):
     return BC.place(img, BTI.text_to_png(question, 600, 150), 400, 0, 400, 200)
