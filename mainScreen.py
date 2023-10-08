@@ -31,18 +31,18 @@ class Person:
 class LimitSize:
     def __init__(self, max_size):
         self.max_size = max_size
-        self.item = []
+        self.items = []
 
-    def append(self, person):
+    def append(self, Person):
         if len(self.items) >= self.max_size:
             for i, existing_person in enumerate(self.items):
-                if person.score > existing_person.score:
-                    self.items[i] = person
+                if Person.score > existing_person.score:
+                    self.items[i] = Person
                     break
                 else:
                     return
         else:
-            self.items.append(person)
+            self.items.append(Person)
             
         self.items.sort(key = lambda x: x.score, reverse = True)
 
@@ -72,8 +72,6 @@ def main():
     input_text = ""
     leaderboardList = LimitSize(3)
     
-    
-
     # GiGi's Variables
     gigiIndex = 0
     gigiMove = -1
@@ -151,12 +149,6 @@ def main():
             leaveSettingsRect.center = (50, 25)
             screen.blit(leaveSettingsSurface, leaveSettingsRect)
 
-            # for event in pygame.event.get():
-            #     if event.type == pygame.QUIT:
-            #         runningTwo = False
-            #     elif event.type == pygame.MOUSEBUTTONDOWN:
-            #         if leaveSettingsRect.collidepoint(event.pos):
-            #             current_screen = "main"
 
         elif current_screen == "leaderboard":
             screen.fill(WHITE)
@@ -603,6 +595,10 @@ def main():
 
                     
         new_person = Person(user_name, 0)
+        leaderboardList.append(new_person)
+        new_person.reset()
+        
+        
         
         
               
