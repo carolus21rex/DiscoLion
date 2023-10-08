@@ -40,6 +40,7 @@ def main():
 
     # Create a linked list to store names
     input_text = ""
+    
 
     # GiGi's Variables
     gigiIndex = 0
