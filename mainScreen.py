@@ -4,10 +4,12 @@ from PIL import Image
 import sys
 import os
 import random
+import time
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ""))
 sys.path.append(parent_dir)
+
 
 import gMain as GE
 
@@ -35,6 +37,11 @@ def main():
     pygame.display.set_caption("DISCO LION")
 
     # Create a linked list to store names
+
+    # GiGi's Variables
+    gigiIndex = 0
+    gigiMove = 1
+    lastTime = time.time_ns()
     
 
     # Create a flag to keep track of the current screen
@@ -173,16 +180,7 @@ def main():
             screen = pygame.display.set_mode((screen_width, screen_height))
             pygame.display.set_caption(nameOfGame)
 
-            # Background image
-            current_directory = os.getcwd()
 
-            # Load the background image
-            background_path = os.path.join(current_directory, 'images', 'savana.png')
-            background = Image.open(background_path)
-            composite_image = GE.placeLion(background, 800, 370)
-            composite_image = GE.placeGiGi(composite_image, 50, 270)
-            # Convert the composite image to a Pygame surface
-            bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
 
             # Create a Pymunk space
@@ -373,7 +371,17 @@ def main():
                 tickCount = tickCount + 1
                 seconds = (int)(tickCount/60)
                 #shape counters
-                
+
+                # Background image
+                current_directory = os.getcwd()
+
+                # Load the background image
+                background_path = os.path.join(current_directory, 'images', 'savana.png')
+                background = Image.open(background_path)
+                composite_image = GE.placeLion(background, 800, 370)
+                composite_image = GE.placeGiGi(composite_image, gigiIndex - 100, 270)
+                # Convert the composite image to a Pygame surface
+                bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
 
                 # Clear the screen + background
@@ -429,17 +437,29 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
-                    pygame.time.wait(10)
+                    gigiMove = 1
                     #Gigi movement
-                    for i in range(50):
-                        pygame.time.wait(10)
-                        print("wait")
-                        composite_image = GE.placeGiGi(composite_image, 50+i, 270)
-                    rectCount = 1
-                    sqrCount = 1
-                    triangleCount = 1
+
+
+
+                    if (gigiMove == -1):
+                        rectCount = 1
+                        sqrCount = 1
+                        triangleCount = 1
                     #for i in range(50):
-                        
+                # Gigi move
+                if gigiMove == 1:
+                    if gigiIndex < 200:
+                        if lastTime <= time.time_ns() + 50000000:
+                            lastTime = time.time_ns()
+                            gigiIndex += 1
+
+                if gigiMove == -1:
+                    if gigiIndex > 0:
+                        if lastTime <= time.time_ns() + 50000000:
+                            lastTime = time.time_ns()
+                            gigiIndex += 1
+
                 #Score Logic
                 for shape in shapes_to_remove:
                     score=score-1

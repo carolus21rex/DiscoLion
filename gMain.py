@@ -14,6 +14,6 @@ def placeLion(img, x, y):
 
 
 def placeGiGi(img, x, y):
-    q = max(30, x)
-    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), 800 * q / 30, 200, 200, 200)
+    q = min(180, x)
+    img = BC.place(img, os.path.join(current_directory, 'images', 'ohNoGigi.png'), int(1100 * q / 30) - 300, 200, 200, 200)
     return BC.place(img, os.path.join(current_directory, 'images', 'gigi.png'), x, y, 200, 300)
