@@ -77,87 +77,168 @@ def Gigi_Puzzle(type, lowest=0, highest=10):
         question = f"{num1} - {num2} = ?"
     
     else:
-        return None  # Invalid puzzle type
+        engine.say(f"Oops! The number you picked was {picked_number}.")
+        engine.runAndWait()
 
-    return {'Question': question, 'Answer': target_number, 'Options': options_csv}
+    # Return
+    return win
 
+# Example usage:
+# if __name__ == "__main__":
+#     result = Gigi_Attack_Number_Recognition()
 
-# %%
-#Test calls
-
-
-#Quiz = Gigi_Puzzle('Number',0,9)
-#print(Quiz)
-#Quiz = Gigi_Puzzle('Count',0,20)
-#print(Quiz)
-#Quiz = Gigi_Puzzle('Add',0,15)
-#print(Quiz)                   
-#Quiz = Gigi_Puzzle('Subtract',0,15)
-#print(Quiz)
 
 # %%
-# Initialize a global dictionary to store scores for each quiz type
-quiz_scores = {
-    'Number': [],
-    'Count': [],
-    'Add': [],
-    'Subtract': []
-}
+import pyttsx3
 
-# %%
-import random
-
-def Gigi_Event():
+def Gigi_Attack_Counting(lowest=0, highest=20):
     """
-    Gigi Math Quiz Game.
-
-    Called by Main to initiate Gigi event
-    Selects puzzle based on results in quiz_scores
-    
-    Returns:
-        dict: A dictionary containing the puzzle and results with keys:
-              - 'QuizType': The type of quiz (e.g., 'Number', 'Counting', 'Add', 'Subtract').
-              - 'Puzzle': A dictionary containing the puzzle with keys:
-                - 'Question': The question of the puzzle.
-                - 'Answer': The correct answer to the puzzle.
-                - 'Options': A CSV string of options for the user to choose from.
-              - 'Result': True if the user's answer is correct, False otherwise.
+    Gigi Attack - Counting game.
     """
-    # List of available quiz types
-    quiz_types = ['Number', 'Count', 'Add', 'Subtract']
+    # Set up target number and options list
+    target_number, options_csv = setup_target_number_and_list(lowest,highest)
 
-    # Randomly choose a quiz type
-    quiz_type = random.choice(quiz_types)
+    # Display Counting Objects
+    display_counting_objects(target_number)
 
-    # quiz_type = select_puzzle_type(quiz_scores) - Advanced version
+    # Display Pick Options
+    display_pick_options(options_csv)
 
-    # Call the respective puzzle function based on the chosen quiz type
-    if quiz_type == "Number":
-        lowest = 0
-        highest= 10
-    elif quiz_type == 'Count':
-        lowest = 0
-        highest = 20
-    elif quiz_type == 'Add':
-        lowest = 0
-        highest = 20
-    elif quiz_type == 'Subtract':
-        lowest = 0
-        highest = 15
-    
-    puzzle = Gigi_Puzzle(quiz_type, lowest, highest)
+    # Get player input
+    picked_number = get_user_input(options_csv)
 
-    return puzzle
+    # Determine win/losss
+    win = picked_number == target_number
+
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    # Announce the result
+    if win:
+        engine.say("Yay, you got it! Roar!")
+        engine.runAndWait()
+    else:
+        engine.say(f"Oh no! There were {target_number}.")
+        engine.runAndWait()
+
+    # Return
+    return win
+
+# Example usage:
+# if __name__ == "__main__":
+#     result = Gigi_Attack_Number_Recognition()
 
 # %%
-#puzzle = Gigi_Event()
-#print(puzzle)
+def display_addition_puzzle(addend1, addend2):
+    """
+    Display the addition puzzle to the user.
+
+    Args:
+        target_number (int): The target number for the puzzle.
+        num1 (int): The first random number.
+        num2 (int): The second random number.
+    """
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    print(f"{addend1} + {addend2} = ")
+    engine.say(f"{addend1} plus {addend2} is?")
+    engine.runAndWait()
 
 # %%
-def Puzzle_Result(puzzle_type, is_correct):
-    # Update the scores based on the result
-    if is_correct:
-        quiz_scores[puzzle_type]["wins"] += 1
+import pyttsx3
+
+def Gigi_Attack_Add(lowest=0, highest=10):
+    """
+    Gigi Attack - Addition game.
+    """
+    # Set up target number and options list
+    target_number, options_csv = setup_target_number_and_list(lowest,highest)
+
+    # Generate two random numbers that add up to the target number
+    addend1 = random.randint(lowest, target_number)
+    addend2 = target_number - addend1
+
+    # Display Addition Formula
+    display_addition_puzzle(addend1, addend2)
+
+    # Display Pick Options
+    display_pick_options(options_csv)
+
+    # Get player input
+    picked_number = get_user_input(options_csv)
+
+    # Determine win/loss
+    win = picked_number == target_number
+
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    # Announce the result
+    if win:
+        engine.say("Yay, you got it! Roar!")
+        engine.runAndWait()
+    else:
+        engine.say(f"Oh no! {addend1} plus {addend2} is {target_number}.")
+        engine.runAndWait()
+
+    # Return
+    return win
+
+# Example usage:
+# if __name__ == "__main__":
+#     result = Gigi_Attack_Number_Recognition()
+
+# %%
+import pyttsx3
+
+def display_subtraction_puzzle(target_number, num1, num2):
+    """
+    Display the subtraction puzzle to the user.
+
+    Args:
+        target_number (int): The target number for the puzzle.
+        num1 (int): The first random number.
+        num2 (int): The second random number.
+    """
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    print(f"{num1} - {num2} = ")
+    engine.say(f"{num1} minus {num2} is?")
+    engine.runAndWait()
+
+
+# %%
+def Gigi_Attack_Subtract(lowest=0, highest=10):
+    """
+    Gigi Attack - Subtraction game.
+    """
+    # Set up target number and options list
+    target_number, options_csv = setup_target_number_and_list(lowest,highest)
+
+    # Generate splits such that num2 - num 1 = target number with num1 > target_number
+    num1 = random.randint(target_number, highest)
+    num2 = num1 - target_number
+
+    # Display the puzzle
+    display_subtraction_puzzle(target_number, num1, num2)
+
+    # Display Pick Options
+    display_pick_options(options_csv)
+
+    # Get player input
+    picked_number = get_user_input(options_csv)
+
+    # Determine win/loss
+    win = picked_number == target_number
+
+    # Initialize the text-to-speech engine
+    engine = pyttsx3.init()
+
+    # Announce the result
+    if win:
+        engine.say("Yay, you got it! Roar!")
     else:
         quiz_scores[puzzle_type]["losses"] += 1
 
