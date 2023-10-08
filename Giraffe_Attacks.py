@@ -193,7 +193,39 @@ def Puzzle_Result(puzzle_info):
         scores.pop(0)  # Remove the oldest score
 
 # %%
-'''
+import random
+
+def select_puzzle_type():
+    # Calculate the percentage of wins for each type
+    total_wins = {type: sum(quiz_scores[type][-10:]) for type in quiz_scores}
+
+    # Determine the selected type based on cascading random chance
+    selected_type = None
+
+    # Start with "Number" type
+    if random.random() < (1 - total_wins.get("Number", 0) / 10):
+        selected_type = "Number"
+    else:
+        # If "Number" is not selected, try "Count" type
+        if random.random() < (1 - total_wins.get("Count", 0) / 10):
+            selected_type = "Count"
+        else:
+            # If "Count" is not selected, try "Add" type
+            if random.random() < (1 - total_wins.get("Add", 0) / 10):
+                selected_type = "Add"
+            else:
+                # If none of the above types are selected, choose "Subtract" type
+                if random.random() < (1 - total_wins.get("Subtract", 0) / 10):
+                    selected_type = "Subtract"
+                else:
+                    # If still none of the types are selected, choose randomly
+                    selected_type = random.choice(["Number", "Count", "Add", "Subtract"])
+
+    return selected_type
+
+
+# %%
+"""
 # Gigi Simulation
 import random
 

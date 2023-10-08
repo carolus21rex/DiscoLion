@@ -5,6 +5,7 @@ import sys
 import os
 import random
 import time
+import  optionsParser as OP
 
 # Add the path to the parent directory (which contains GraphicsEngine) to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,6 +24,32 @@ class Person:
     def display(self):
         print(f"Name: {self.name}, Score: {self.score}")
 
+    def reset(self):
+        # Reset the attributes to their initial values or some specific values
+        self.name = ""
+        self.score = 0
+
+class LimitSize:
+    def __init__(self, max_size):
+        self.max_size = max_size
+        self.items = []
+
+    def append(self, Person):
+        if len(self.items) >= self.max_size:
+            lowest_person = min(self.items, key = lambda x: x.score)
+            if Person.score > lowest_person.score:
+                self.items[2] = Person
+            else:
+                return
+        else:
+            self.items.append(Person)
+            
+        self.items.sort(key = lambda x: x.score, reverse = True)
+
+    def get_items(self):
+        return self.items
+            
+
 def main():
     # Initialize Pygame
     pygame.init()
@@ -39,16 +66,21 @@ def main():
     pygame.display.set_caption("DISCO LION")
 
     # Create a linked list to store names
+    global input_text
+    user_name = ""
     input_text = ""
+    leaderboardList = LimitSize(3)
+    player = Person(user_name, 0)
     
-
     # GiGi's Variables
     gigiIndex = 0
-    gigiMove = 1
+    gigiMove = -1
     gigiDict = None
     lastTime = time.time_ns()
+    lastTime2 = time.time_ns()
+    quizX = 0
+    quizY = 0
     
-
     # Create a flag to keep track of the current screen
     current_screen = "main"
 
@@ -117,12 +149,6 @@ def main():
             leaveSettingsRect.center = (50, 25)
             screen.blit(leaveSettingsSurface, leaveSettingsRect)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    runningTwo = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if leaveSettingsRect.collidepoint(event.pos):
-                        current_screen = "main"
 
         elif current_screen == "leaderboard":
             screen.fill(WHITE)
@@ -137,12 +163,22 @@ def main():
             leaveLeaderRect.center = (50, 25)
             screen.blit(leaveLeaderSurface, leaveLeaderRect)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    runningTwo = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if leaveLeaderRect.collidepoint(event.pos):
-                        current_screen = "main"
+            items = leaderboardList.get_items()
+
+            playerNameSurface = font.render(f"{items[0].name}", True, (0,0,0))
+            playerNameRect = playerNameSurface.get_rect()
+            playerNameRect.center = (WIDTH // 2, 300)
+            screen.blit(playerNameSurface, playerNameRect)
+            for person in items:
+                playerNameSurface = font.render(f"{person.name}", True, (0,0,0))
+                playerNameRect = playerNameSurface.get_rect()
+                playerNameRect.center = (WIDTH // 2, 300)
+                screen.blit(playerNameSurface, playerNameRect)
+
+                playerScoreSurface = font.render(f"{person.score}", True, (0,0,0))
+                playerScoreRect = playerScoreSurface.get_rect()
+                playerScoreRect.center = (WIDTH // 2, 350)
+                screen.blit(playerScoreSurface, playerScoreRect)
                         
         elif current_screen == "name":
             screen.fill(WHITE)
@@ -157,23 +193,11 @@ def main():
             nameRect = nameSurface.get_rect()
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
-
             inputSurface = font.render(input_text, True, (0,0,0))
             inputRect = inputSurface.get_rect()
             inputRect.center = (WIDTH // 1.5, 350)
             screen.blit(inputSurface, inputRect)
-
-            # MOVE TO EVENT CHECKER
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        user_name = input_text
-                        input_text = ""
-                        current_screen = "game"
-                    elif event.key == pygame.K_BACKSPACE:
-                        input_text = input_text[:-1]
-                    else:
-                        input_text += event.unicode
+                    
 
         elif current_screen == "game":
             screen.fill(WHITE)
@@ -370,16 +394,27 @@ def main():
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        runningTwo = False
                         running = False
                     elif score>=20:
                         print("You won in ", seconds)
                         running = False
                         current_screen = "main"
+                        player.score = seconds
+                        leaderboardList.append(player)
+                        print(player.name)
+                        print(player.score)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if leaveRect.collidepoint(event.pos):
                             print("LEAVE")
                             current_screen = "main"
+                            player.reset()
                             running = False
+                        elif current_screen == "game":
+                            quizX, quizY = event.pos
+                            coordinates_text = f"Clicked at ({quizX}, {quizY})"
+                            lastTime = time.time_ns()
+                            print(coordinates_text)
                     elif event.type == pygame.KEYDOWN:
                         #if event.key == pygame.K_c:  # Press 'C' to spawn a circle
                         #    spawn_circle(pygame.mouse.get_pos())
@@ -396,7 +431,6 @@ def main():
                 space.step(1 / 30)
                 tickCount = tickCount + 1
                 seconds = (int)(tickCount/30)
-                #shape counters
 
                 # Background image
                 current_directory = os.getcwd()
@@ -406,9 +440,24 @@ def main():
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
-                if gigiDict is not None:
-                    print(gigiDict['Question'])
+                if gigiMove == 2:
                     composite_image = GE.question(composite_image, gigiDict['Question'])
+                    if gigiDict["Type"] != "Count":
+                        composite_image = GE.answers(composite_image, gigiDict['Options'])
+                    else:
+                        print("everybody died. the end.")
+                        gigiMove = 0
+                if lastTime > lastTime2 and gigiMove == 2:
+                    if 135 <= quizY <= 190:
+                        index = int((quizX-565)/50)
+                        print(index)
+                        if 0 <= index < 4:
+                            gigiDict["Selection"] = OP.answers(gigiDict["Options"])[index]
+                            a = GG.Puzzle_Result(gigiDict)
+                            print(a)
+                            if not a:
+                                deleteRandomShape()
+                            gigiMove = -1
 
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
@@ -428,6 +477,32 @@ def main():
                 leaveRect = leaveSurface.get_rect()
                 leaveRect.center = (50, 25)
                 screen.blit(leaveSurface, leaveRect)
+
+                #rectangle counter
+                rectCounterX = 400
+                rectCounterY = 25
+                
+                pygame.draw.rect(screen, (0,0,255), (rectCounterX, rectCounterY, commonLength*2, commonLength))
+                rectCounterSurface = font.render(str(rectCount), True, (0,0,0))
+                counterRect = rectCounterSurface.get_rect()
+                counterRect.center = (rectCounterX+commonLength, rectCounterY+(commonLength+25))
+                screen.blit(rectCounterSurface, counterRect)
+                #square counter
+                sqrCounterX = 350
+                sqrCounterY = 25
+                pygame.draw.rect(screen, (0,255,0), (sqrCounterX, sqrCounterY, commonLength, commonLength))
+                sqrCounterSurface = font.render(str(sqrCount), True, (0,0,0))
+                counterSqr = sqrCounterSurface.get_rect()
+                counterSqr.center = (sqrCounterX+25, sqrCounterY+(commonLength+25))
+                screen.blit(sqrCounterSurface, counterSqr)
+                triX = 300
+                triY = 75
+                pygame.draw.polygon(screen, (255,0,0), ((triX,triY), (triX+commonLength,triY), (triX,triY-commonLength)))
+                triCounterSurface = font.render(str(triangleCount), True, (0,0,0))
+                counterTri = triCounterSurface.get_rect()
+                counterTri.center = (triX+25, sqrCounterY+commonLength+25)
+                screen.blit(triCounterSurface, counterTri)
+
                 # Draw the ground
                 pygame.draw.line(screen, (0, 0, 0), (groundCutoff, screen_height - groundHeight), (screen_width-groundCutoff, screen_height- groundHeight), groundThickness)
                 # Draw drop limit
@@ -468,9 +543,9 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
-                    gigiMove = 1
-                    if gigiIndex == 200:
-                        gigiMove = 0
+
+                    if gigiIndex < 120:
+                        gigiMove = 1
 
 
 
@@ -482,17 +557,21 @@ def main():
                     #for i in range(50):
                 # Gigi move
                 if gigiMove == 1:
-                    if gigiIndex < 200:
+                    if gigiIndex < 120:
                         gigiIndex += 1
+                    if gigiIndex == 120:
+                        gigiMove = 0
                 if gigiMove == 0:
                     gigiDict = GG.Gigi_Event()
 
                     # do quiz
-
+                    lastTime2 = time.time_ns()
                     gigiMove = 2
                 if gigiMove == -1:
                     if gigiIndex > 0:
-                        gigiIndex += 1
+                        gigiIndex -= 1
+                    else:
+                        gigiMove = -2
 
                 #Score Logic
                 for shape in shapes_to_remove:
@@ -509,8 +588,6 @@ def main():
                 scoreStr = "Score: " + str(score)
                 scoreLabel = myFont.render(scoreStr, score, (0,0,0))
                 screen.blit(scoreLabel, (900, 40))
-
-                
 
                 # Update the Pygame display
                 pygame.display.flip()
@@ -534,16 +611,26 @@ def main():
                             current_screen = "settings"
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
-                # elif current_screen == "leaderboard":
-                #     if leaveSettingsRect.collidepoint(event.pos):
-                #         current_screen = "main"
-                # elif current_screen == "settings":
-                #     if leaveLeaderRect.collidepoint(event.pos):
-                #         current_screen = "main"
+                elif current_screen == "leaderboard":
+                    if leaveLeaderRect.collidepoint(event.pos):
+                        current_screen = "main"
+                elif current_screen == "settings":
+                    if leaveSettingsRect.collidepoint(event.pos):
+                        current_screen = "main"
+            elif event.type == pygame.KEYDOWN:
+                 if current_screen == "name":
+                    if event.key == pygame.K_RETURN:
+                        user_name = input_text
+                        player.name = user_name
+                        input_text = ""
+                        current_screen = "game"
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_text = input_text[:-1]
+                    else:
+                        input_text += event.unicode
+              
                         
-
-
-                            
+      
 
         pygame.display.flip()
 
