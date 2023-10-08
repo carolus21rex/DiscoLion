@@ -438,7 +438,9 @@ def main():
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
                     gigiMove = 1
-                    #Gigi movement
+                    if gigiIndex == 200:
+                        gigiMove = 0
+
 
 
 
@@ -453,7 +455,9 @@ def main():
                         if lastTime <= time.time_ns() + 50000000:
                             lastTime = time.time_ns()
                             gigiIndex += 1
-
+                if gigiMove == 0:
+                    # do quiz
+                    print("bob")
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         if lastTime <= time.time_ns() + 50000000:
