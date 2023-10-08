@@ -19,10 +19,10 @@ def text_to_png(text):
     # Text color (RGB)
     text_color = (0, 0, 0)  # Black
 
-    # Calculate the text size and position within the image
-    text_width, text_height = draw.textsize(text, font)
-    x = (width - text_width) / 2
-    y = (height - text_height) / 2
+    # Calculate the text size and position within the image using font.getbbox()
+    bbox = draw.textbbox((0, 0), text, font=font)
+    x = (width - bbox[2] - bbox[0]) / 2
+    y = (height - bbox[3] - bbox[1]) / 2
 
     # Add the text to the image
     draw.text((x, y), text, fill=text_color, font=font)

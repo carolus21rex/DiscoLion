@@ -40,10 +40,12 @@ def main():
 
     # Create a linked list to store names
     input_text = ""
+    
 
     # GiGi's Variables
     gigiIndex = 0
     gigiMove = 1
+    gigiDict = None
     lastTime = time.time_ns()
     
 
@@ -60,73 +62,47 @@ def main():
     # Main game loop
     runningTwo = True
     while runningTwo:
- 
-        # Clear the screen
-        screen.fill(WHITE)
+        if current_screen == "main":
+            # Clear the screen
+            screen.fill(WHITE)
 
-        # Background of the window
-        screen.fill(LIGHT_BLUE)
+            # Background of the window
+            screen.fill(LIGHT_BLUE)
 
-        # Calculate the position and size of the menu box
-        rectWidth = 450
-        rectHeight = 450
-        rect_x = (WIDTH - rectWidth) // 2
-        rect_y = (HEIGHT - rectHeight) // 2
+            # Calculate the position and size of the menu box
+            rectWidth = 450
+            rectHeight = 450
+            rect_x = (WIDTH - rectWidth) // 2
+            rect_y = (HEIGHT - rectHeight) // 2
 
-        # Draws the rectangle to the screen
-        pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
+            # Draws the rectangle to the screen
+            pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
 
-        # Render "start game" text
-        startSurface = font.render(startText, True, (0,0,0))
-        startRect = startSurface.get_rect()
-        startRect.center = (WIDTH // 2, 250)
-        screen.blit(startSurface, startRect)
+            # Render "start game" text
+            startSurface = font.render(startText, True, (0,0,0))
+            startRect = startSurface.get_rect()
+            startRect.center = (WIDTH // 2, 250)
+            screen.blit(startSurface, startRect)
 
-        # Render "leaderboard" text
-        leaderSurface = font.render(leaderboardText, True, (0,0,0))
-        leaderRect = leaderSurface.get_rect()
-        leaderRect.center = (WIDTH // 2, 300)
-        screen.blit(leaderSurface, leaderRect)
+            # Render "leaderboard" text
+            leaderSurface = font.render(leaderboardText, True, (0,0,0))
+            leaderRect = leaderSurface.get_rect()
+            leaderRect.center = (WIDTH // 2, 300)
+            screen.blit(leaderSurface, leaderRect)
 
-        # Render "settings" text
-        settingsSurface = font.render(settingsText, True, (0,0,0))
-        settingsRect = settingsSurface.get_rect()
-        settingsRect.center = (WIDTH // 2, 350)
-        screen.blit(settingsSurface, settingsRect)
+            # Render "settings" text
+            settingsSurface = font.render(settingsText, True, (0,0,0))
+            settingsRect = settingsSurface.get_rect()
+            settingsRect.center = (WIDTH // 2, 350)
+            screen.blit(settingsSurface, settingsRect)
 
-        # Render "quit" text
-        quitSurface= font.render(quitText, True, (0,0,0))
-        quitRect = quitSurface.get_rect()
-        quitRect.center = (WIDTH // 2, 396.75)
-        screen.blit(quitSurface, quitRect)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                runningTwo= False
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if current_screen == "main":
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if leaderRect.collidepoint(event.pos):
-                            print("LEADERBOARD")
-                            current_screen = "leaderboard"
-                        elif startRect.collidepoint(event.pos):
-                            print("START")
-                            current_screen = "name"
-                        elif settingsRect.collidepoint(event.pos):
-                            print("SETTINGS")
-                            current_screen = "settings"
-                        elif quitRect.collidepoint(event.pos):
-                            runningTwo = False
-
-
-        # Back button dimensions
-        rectWidth = 100
-        rectHeight = 100
-        rect_x = (WIDTH - rectWidth) // 2
-        rect_y = (HEIGHT - rectHeight) // 2
-
-        # Draw the appropriate screen
-        if current_screen == "settings":
+            # Render "quit" text
+            quitSurface= font.render(quitText, True, (0,0,0))
+            quitRect = quitSurface.get_rect()
+            quitRect.center = (WIDTH // 2, 396.75)
+            screen.blit(quitSurface, quitRect)
+        
+        elif current_screen == "settings":
             screen.fill(WHITE)
             
             # Background of the window
@@ -143,11 +119,10 @@ def main():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    runningTwo = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if leaveSettingsRect.collidepoint(event.pos):
                         current_screen = "main"
-
 
         elif current_screen == "leaderboard":
             screen.fill(WHITE)
@@ -178,11 +153,17 @@ def main():
 
             # Ask for user name
             nameText = "Type your name: "
-            nameSurface = font.render(settingsText, True, (0,0,0))
+            nameSurface = font.render(nameText, True, (0,0,0))
             nameRect = nameSurface.get_rect()
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
 
+            inputSurface = font.render(input_text, True, (0,0,0))
+            inputRect = inputSurface.get_rect()
+            inputRect.center = (WIDTH // 1.5, 350)
+            screen.blit(inputSurface, inputRect)
+
+            # MOVE TO EVENT CHECKER
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
@@ -196,6 +177,14 @@ def main():
 
         elif current_screen == "game":
             screen.fill(WHITE)
+            # Back button dimensions
+            rectWidth = 100
+            rectHeight = 100
+            rect_x = (WIDTH - rectWidth) // 2
+            rect_y = (HEIGHT - rectHeight) // 2
+
+            # Draw the appropriate screen
+
 
             # Game Variables
             nameOfGame = "Disco Lion Game"
@@ -404,9 +393,9 @@ def main():
                             spawn_square(pygame.mouse.get_pos())
 
                 # Update Pymunk space
-                space.step(1 / 60)
+                space.step(1 / 30)
                 tickCount = tickCount + 1
-                seconds = (int)(tickCount/60)
+                seconds = (int)(tickCount/30)
                 #shape counters
 
                 # Background image
@@ -417,6 +406,10 @@ def main():
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
+                if gigiDict is not None:
+                    print(gigiDict['Question'])
+                    composite_image = GE.question(composite_image, gigiDict['Question'])
+
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
 
@@ -491,9 +484,11 @@ def main():
                     if gigiIndex < 200:
                         gigiIndex += 1
                 if gigiMove == 0:
+                    gigiDict = GG.Gigi_Event()
 
                     # do quiz
-                    print("bob")
+
+                    gigiMove = 2
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         gigiIndex += 1
@@ -518,7 +513,34 @@ def main():
 
                 # Update the Pygame display
                 pygame.display.flip()
-                clock.tick(60)
+                clock.tick(120)
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                runningTwo= False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if current_screen == "main":
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if leaderRect.collidepoint(event.pos):
+                            print("LEADERBOARD")
+                            current_screen = "leaderboard"
+                        elif startRect.collidepoint(event.pos):
+                            print("START")
+                            current_screen = "name"
+                        elif settingsRect.collidepoint(event.pos):
+                            print("SETTINGS")
+                            current_screen = "settings"
+                        elif quitRect.collidepoint(event.pos):
+                            runningTwo = False
+                # elif current_screen == "leaderboard":
+                #     if leaveSettingsRect.collidepoint(event.pos):
+                #         current_screen = "main"
+                # elif current_screen == "settings":
+                #     if leaveLeaderRect.collidepoint(event.pos):
+                #         current_screen = "main"
+                        
+
 
                             
 
