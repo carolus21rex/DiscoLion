@@ -466,7 +466,6 @@ def main():
                     if gigiDict["Type"] != "Count":
                         composite_image = GE.answers(composite_image, gigiDict['Options'])
                     else:
-                        print("everybody died. the end.")
                         gigiMove = 0
                 if lastTime > lastTime2 and gigiMove == 2:
                     if 135 <= quizY <= 190:
