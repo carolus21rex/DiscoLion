@@ -429,6 +429,7 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
+                    pygame.time.wait(10)
                     #Gigi movement
                     for i in range(50):
                         pygame.time.wait(10)
