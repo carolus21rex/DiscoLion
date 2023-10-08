@@ -434,6 +434,16 @@ def main():
                 leaveRect = leaveSurface.get_rect()
                 leaveRect.center = (50, 25)
                 screen.blit(leaveSurface, leaveRect)
+
+                #How many shapes you have to use and counters drawing
+                
+                    # Convert vertices to screen coordinates
+
+                
+                pygame.draw.rect(screen, (0,0,255), (900, 50, commonLength, commonLength/2))
+
+
+
                 # Draw the ground
                 pygame.draw.line(screen, (0, 0, 0), (groundCutoff, screen_height - groundHeight), (screen_width-groundCutoff, screen_height- groundHeight), groundThickness)
                 # Draw drop limit
@@ -550,7 +560,6 @@ def main():
                         current_screen = "main"
             elif event.type == pygame.KEYDOWN:
                  if current_screen == "name":
-                    print("got here")
                     if event.key == pygame.K_RETURN:
                         user_name = input_text
                         input_text = ""
