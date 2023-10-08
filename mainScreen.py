@@ -164,15 +164,21 @@ def main():
             screen.blit(leaveLeaderSurface, leaveLeaderRect)
 
             items = leaderboardList.get_items()
+
+            playerNameSurface = font.render(f"{items[0].name}", True, (0,0,0))
+            playerNameRect = playerNameSurface.get_rect()
+            playerNameRect.center = (WIDTH // 2, 300)
+            screen.blit(playerNameSurface, playerNameRect)
             for person in items:
                 playerNameSurface = font.render(f"{person.name}", True, (0,0,0))
                 playerNameRect = playerNameSurface.get_rect()
-                playerNameRect.center(50, 25)
+                playerNameRect.center = (WIDTH // 2, 300)
                 screen.blit(playerNameSurface, playerNameRect)
 
-                playerScoreSurface = font.rend
-            # Draw leader board
-            player1NameSurface = font.render()
+                playerScoreSurface = font.render(f"{person.score}", True, (0,0,0))
+                playerScoreRect = playerScoreSurface.get_rect()
+                playerScoreRect.center = (WIDTH // 2, 350)
+                screen.blit(playerScoreSurface, playerScoreRect)
                         
         elif current_screen == "name":
             screen.fill(WHITE)
@@ -394,10 +400,15 @@ def main():
                         print("You won in ", seconds)
                         running = False
                         current_screen = "main"
+                        player.score = seconds
+                        leaderboardList.append(player)
+                        print(player.name)
+                        print(player.score)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if leaveRect.collidepoint(event.pos):
                             print("LEAVE")
                             current_screen = "main"
+                            player.reset()
                             running = False
                         elif current_screen == "game":
                             quizX, quizY = event.pos
