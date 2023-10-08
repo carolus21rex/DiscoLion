@@ -39,6 +39,7 @@ def main():
     pygame.display.set_caption("DISCO LION")
 
     # Create a linked list to store names
+    global input_text
     input_text = ""
     
 
@@ -117,12 +118,12 @@ def main():
             leaveSettingsRect.center = (50, 25)
             screen.blit(leaveSettingsSurface, leaveSettingsRect)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    runningTwo = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if leaveSettingsRect.collidepoint(event.pos):
-                        current_screen = "main"
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         runningTwo = False
+            #     elif event.type == pygame.MOUSEBUTTONDOWN:
+            #         if leaveSettingsRect.collidepoint(event.pos):
+            #             current_screen = "main"
 
         elif current_screen == "leaderboard":
             screen.fill(WHITE)
@@ -137,12 +138,12 @@ def main():
             leaveLeaderRect.center = (50, 25)
             screen.blit(leaveLeaderSurface, leaveLeaderRect)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    runningTwo = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if leaveLeaderRect.collidepoint(event.pos):
-                        current_screen = "main"
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         runningTwo = False
+            #     elif event.type == pygame.MOUSEBUTTONDOWN:
+            #         if leaveLeaderRect.collidepoint(event.pos):
+            #             current_screen = "main"
                         
         elif current_screen == "name":
             screen.fill(WHITE)
@@ -157,23 +158,25 @@ def main():
             nameRect = nameSurface.get_rect()
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
-
             inputSurface = font.render(input_text, True, (0,0,0))
             inputRect = inputSurface.get_rect()
             inputRect.center = (WIDTH // 1.5, 350)
             screen.blit(inputSurface, inputRect)
 
             # MOVE TO EVENT CHECKER
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        user_name = input_text
-                        input_text = ""
-                        current_screen = "game"
-                    elif event.key == pygame.K_BACKSPACE:
-                        input_text = input_text[:-1]
-                    else:
-                        input_text += event.unicode
+            # for event in pygame.event.get():
+            #     if event.type == pygame.KEYDOWN:
+            #         if event.key == pygame.K_RETURN:
+            #             user_name = input_text
+            #             input_text = ""
+            #             current_screen = "game"
+            #         elif event.key == pygame.K_BACKSPACE:
+            #             input_text = input_text[:-1]
+            #         else:
+            #             input_text += event.unicode
+            #     elif event.type == pygame.QUIT:
+            #         runningTwo = False
+                    
 
         elif current_screen == "game":
             screen.fill(WHITE)
@@ -370,7 +373,7 @@ def main():
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        running = False
+                        runningTwo = False
                     elif score>=20:
                         print("You won in ", seconds)
                         running = False
@@ -458,9 +461,10 @@ def main():
                     # Draw the triangle
                     pygame.draw.polygon(screen, (255, 0, 0), points)
                 for sqr in squares:
+                    vertices = [sqr.body.local_to_world(v) for v in sqr.get_vertices()]
                     # Convert vertices to screen coordinates
-                    points = [(int(sqr.body.position.x + point.x), int(screen_height - (sqr.body.position.y + point.y))) for point in sqr.get_vertices()]
-                    #Schedule Square to be deleted
+
+                    points = [(int(point.x), int(screen_height - point.y)) for point in vertices]
                     if sqr.body.position.y < -100:  # Adjust the threshold as needed
                         shapes_to_remove.append(sqr)
                     # Draw the rectangle
@@ -536,12 +540,24 @@ def main():
                             current_screen = "settings"
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
-                # elif current_screen == "leaderboard":
-                #     if leaveSettingsRect.collidepoint(event.pos):
-                #         current_screen = "main"
-                # elif current_screen == "settings":
-                #     if leaveLeaderRect.collidepoint(event.pos):
-                #         current_screen = "main"
+                elif current_screen == "leaderboard":
+                    if leaveLeaderRect.collidepoint(event.pos):
+                        current_screen = "main"
+                elif current_screen == "settings":
+                    if leaveSettingsRect.collidepoint(event.pos):
+                        current_screen = "main"
+            elif event.type == pygame.KEYDOWN:
+                 if current_screen == "name":
+                    print("got here")
+                    if event.key == pygame.K_RETURN:
+                        user_name = input_text
+                        input_text = ""
+                        current_screen = "game"
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_text = input_text[:-1]
+                    else:
+                        input_text += event.unicode
+                
                         
 
 
