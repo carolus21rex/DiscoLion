@@ -85,14 +85,15 @@ def Gigi_Puzzle(type, lowest=0, highest=10):
 # %%
 #Test calls
 
-Quiz = Gigi_Puzzle('Number',0,9)
-print(Quiz)
-Quiz = Gigi_Puzzle('Count',0,20)
-print(Quiz)
-Quiz = Gigi_Puzzle('Add',0,15)
-print(Quiz)                   
-Quiz = Gigi_Puzzle('Subtract',0,15)
-print(Quiz)
+
+#Quiz = Gigi_Puzzle('Number',0,9)
+#print(Quiz)
+#Quiz = Gigi_Puzzle('Count',0,20)
+#print(Quiz)
+#Quiz = Gigi_Puzzle('Add',0,15)
+#print(Quiz)                   
+#Quiz = Gigi_Puzzle('Subtract',0,15)
+#print(Quiz)
 
 # %%
 # Initialize a global dictionary to store scores for each quiz type
@@ -147,6 +148,10 @@ def Gigi_Event():
     puzzle = Gigi_Puzzle(quiz_type, lowest, highest)
 
     return puzzle
+
+# %%
+#puzzle = Gigi_Event()
+#print(puzzle)
 
 # %%
 def Puzzle_Result(puzzle_type, is_correct):
