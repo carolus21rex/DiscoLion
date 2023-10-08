@@ -255,7 +255,7 @@ def main():
 
             # Create a Pymunk space
             space = pymunk.Space()
-            space.gravity = (0, -100)  # Set gravity
+            space.gravity = (0, -200)  # Set gravity
 
             # Create a ground segment
             ground_body = pymunk.Body(body_type=pymunk.Body.STATIC)
