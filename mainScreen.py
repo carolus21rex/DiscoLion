@@ -70,7 +70,7 @@ def main():
     user_name = ""
     input_text = ""
     leaderboardList = LimitSize(3)
-    player = Person(user_name, 0)
+    
     
     # GiGi's Variables
     gigiIndex = 0
@@ -165,20 +165,40 @@ def main():
 
             items = leaderboardList.get_items()
 
-            playerNameSurface = font.render(f"{items[0].name}", True, (0,0,0))
-            playerNameRect = playerNameSurface.get_rect()
-            playerNameRect.center = (WIDTH // 2, 300)
-            screen.blit(playerNameSurface, playerNameRect)
-            for person in items:
-                playerNameSurface = font.render(f"{person.name}", True, (0,0,0))
-                playerNameRect = playerNameSurface.get_rect()
-                playerNameRect.center = (WIDTH // 2, 300)
-                screen.blit(playerNameSurface, playerNameRect)
+            if len(items) >= 1:
 
-                playerScoreSurface = font.render(f"{person.score}", True, (0,0,0))
-                playerScoreRect = playerScoreSurface.get_rect()
-                playerScoreRect.center = (WIDTH // 2, 350)
-                screen.blit(playerScoreSurface, playerScoreRect)
+                playerName1Surface = font.render(f"{items[0].name}", True, (0,0,0))
+                playerName1Rect = playerName1Surface.get_rect()
+                playerName1Rect.center = (WIDTH // 2, 300)
+                screen.blit(playerName1Surface, playerName1Rect)
+
+                playerScore1Surface = font.render(f"{items[0].score}", True, (0,0,0))
+                playerScore1Rect = playerScore1Surface.get_rect()
+                playerScore1Rect.center = (WIDTH // 3, 300)
+                screen.blit(playerScore1Surface, playerScore1Rect)
+
+            if len(items) > 1:
+                playerName2Surface = font.render(f"{items[1].name}", True, (0,0,0))
+                playerName2Rect = playerName2Surface.get_rect()
+                playerName2Rect.center = (WIDTH // 2, 350)
+                screen.blit(playerName2Surface, playerName2Rect)
+
+                playerScore2Surface = font.render(f"{items[1].score}", True, (0,0,0))
+                playerScore2Rect = playerScore2Surface.get_rect()
+                playerScore2Rect.center = (WIDTH // 3, 350)
+                screen.blit(playerScore2Surface, playerScore2Rect)
+
+            if len(items) > 2:
+                playerName3Surface = font.render(f"{items[2].name}", True, (0,0,0))
+                playerName3Rect = playerName3Surface.get_rect()
+                playerName3Rect.center = (WIDTH // 2, 400)
+                screen.blit(playerName3Surface, playerName3Rect)
+
+                playerScore3Surface = font.render(f"{items[2].score}", True, (0,0,0))
+                playerScore3Rect = playerScore3Surface.get_rect()
+                playerScore3Rect.center = (WIDTH // 3, 400)
+                screen.blit(playerScore3Surface, playerScore3Rect)
+   
                         
         elif current_screen == "name":
             screen.fill(WHITE)
@@ -397,9 +417,11 @@ def main():
                         runningTwo = False
                         running = False
                     elif score>=20:
+                        player = Person(user_name, 0)
                         print("You won in ", seconds)
                         running = False
                         current_screen = "main"
+                        player.name = user_name
                         player.score = seconds
                         leaderboardList.append(player)
                         print(player.name)
@@ -408,7 +430,6 @@ def main():
                         if leaveRect.collidepoint(event.pos):
                             print("LEAVE")
                             current_screen = "main"
-                            player.reset()
                             running = False
                         elif current_screen == "game":
                             quizX, quizY = event.pos
@@ -445,7 +466,6 @@ def main():
                     if gigiDict["Type"] != "Count":
                         composite_image = GE.answers(composite_image, gigiDict['Options'])
                     else:
-                        print("everybody died. the end.")
                         gigiMove = 0
                 if lastTime > lastTime2 and gigiMove == 2:
                     if 135 <= quizY <= 190:
@@ -621,7 +641,6 @@ def main():
                  if current_screen == "name":
                     if event.key == pygame.K_RETURN:
                         user_name = input_text
-                        player.name = user_name
                         input_text = ""
                         current_screen = "game"
                     elif event.key == pygame.K_BACKSPACE:
