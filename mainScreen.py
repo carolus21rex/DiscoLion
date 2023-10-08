@@ -74,7 +74,7 @@ def main():
     
     # GiGi's Variables
     gigiIndex = 0
-    gigiMove = 1
+    gigiMove = -1
     gigiDict = None
     lastTime = time.time_ns()
     
@@ -507,7 +507,7 @@ def main():
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
 
-                    if gigiIndex < 200:
+                    if gigiIndex < 120:
                         gigiMove = 1
 
 
@@ -520,9 +520,9 @@ def main():
                     #for i in range(50):
                 # Gigi move
                 if gigiMove == 1:
-                    if gigiIndex < 200:
+                    if gigiIndex < 120:
                         gigiIndex += 1
-                    if gigiIndex == 200:
+                    if gigiIndex == 120:
                         gigiMove = 0
                 if gigiMove == 0:
                     gigiDict = GG.Gigi_Event()
@@ -533,6 +533,8 @@ def main():
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         gigiIndex += 1
+                    else:
+                        gigiMove = -2
 
                 #Score Logic
                 for shape in shapes_to_remove:
