@@ -410,7 +410,6 @@ def main():
                 composite_image = GE.placeLion(background, 800, 370)
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
                 if gigiDict is not None:
-                    print(gigiDict['Question'])
                     composite_image = GE.question(composite_image, gigiDict['Question'])
 
                 # Convert the composite image to a Pygame surface
@@ -481,9 +480,9 @@ def main():
                     # Draw the rectangle
                     pygame.draw.polygon(screen, (0, 255, 0), points)
                 if triangleCount==0 and sqrCount==0 and rectCount==0:
-                    gigiMove = 1
-                    if gigiIndex == 200:
-                        gigiMove = 0
+
+                    if gigiIndex < 200:
+                        gigiMove = 1
 
 
 
@@ -497,12 +496,16 @@ def main():
                 if gigiMove == 1:
                     if gigiIndex < 200:
                         gigiIndex += 1
+                    if gigiIndex == 200:
+                        gigiMove = 0
+                print(gigiMove)
                 if gigiMove == 0:
                     gigiDict = GG.Gigi_Event()
 
                     # do quiz
 
                     gigiMove = 2
+                    print(gigiMove)
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         gigiIndex += 1
