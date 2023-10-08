@@ -8,6 +8,22 @@ import random                   # Randomization
 #import pyttsx3                  # text to speech
 
 # %%
+# Initialize a global dictionary to store scores for each quiz type
+quiz_scores = {
+    'Number': [],
+    'Count': [],
+    'Add': [],
+    'Subtract': []
+}
+
+quiz_scores['Number'] = []
+quiz_scores['Count'] = []
+quiz_scores['Add'] = []
+quiz_scores['Subtract'] = []
+
+#print(quiz_scores)
+
+# %%
 def setup_target_number_and_list(lowest=0, highest=9):
     """
     Set up a random number and a CSV string of 4 random numbers, including the correct number.
@@ -37,6 +53,38 @@ def setup_target_number_and_list(lowest=0, highest=9):
 # Example usage:
 # random_number, options_csv = setup_target_number_and_list()
 # number_text = str(random_number)  # You can convert the random_number to text here
+
+# %%
+import random
+
+def select_puzzle_type():
+    # Calculate the percentage of wins for each type
+    total_wins = {type: sum(quiz_scores[type][-10:]) for type in quiz_scores}
+
+    # Determine the selected type based on cascading random chance
+    selected_type = None
+
+    # Start with "Number" type
+    if random.random() < (1 - total_wins.get("Number", 0) / 10):
+        selected_type = "Number"
+    else:
+        # If "Number" is not selected, try "Count" type
+        if random.random() < (1 - total_wins.get("Count", 0) / 10):
+            selected_type = "Count"
+        else:
+            # If "Count" is not selected, try "Add" type
+            if random.random() < (1 - total_wins.get("Add", 0) / 10):
+                selected_type = "Add"
+            else:
+                # If none of the above types are selected, choose "Subtract" type
+                if random.random() < (1 - total_wins.get("Subtract", 0) / 10):
+                    selected_type = "Subtract"
+                else:
+                    # If still none of the types are selected, choose randomly
+                    selected_type = random.choice(["Number", "Count", "Add", "Subtract"])
+
+    return selected_type
+
 
 # %%
 import random
@@ -81,22 +129,6 @@ def Gigi_Puzzle(type, lowest=0, highest=10):
 
     return {'Type': type, 'Question': question, 'Answer': target_number, 'Options': options_csv}
 
-
-# %%
-# Initialize a global dictionary to store scores for each quiz type
-quiz_scores = {
-    'Number': [],
-    'Count': [],
-    'Add': [],
-    'Subtract': []
-}
-
-quiz_scores['Number'] = []
-quiz_scores['Count'] = []
-quiz_scores['Add'] = []
-quiz_scores['Subtract'] = []
-
-print(quiz_scores)
 
 # %%
 import random
@@ -159,10 +191,10 @@ def Puzzle_Result(puzzle_info):
     # Keep only the last 10 results
     if len(scores) > 10:
         scores.pop(0)  # Remove the oldest score
+    
+    return is_correct 
 
-    return is_correct
-
-
+# %%
 import random
 
 def select_puzzle_type():
@@ -192,44 +224,5 @@ def select_puzzle_type():
                     selected_type = random.choice(["Number", "Count", "Add", "Subtract"])
 
     return selected_type
-
-
-# %%
-"""
-# Gigi Simulation
-import random
-
-# Simulated sequence of Gigi events and puzzle results
-for i in range(50):
-    # Simulate Gigi event
-    puzzle = Gigi_Event()
-    print(i, puzzle)
-
-    # Simulate puzzle result (80% success rate)
-    is_correct = random.random() < 0.8
-
-    # Create puzzle_info dictionary
-    puzzle_info = {
-        'Type': puzzle["Type"],
-        'Question': puzzle["Question"],
-        'Answer': puzzle["Answer"],
-        'Selection': puzzle["Answer"] if is_correct else puzzle["Answer"] + 1
-    }
-    print(puzzle_info)
-
-    # Pass puzzle_info to Puzzle_Result
-    Puzzle_Result(puzzle_info)
-
-    # Print updated scores
-    print("\nUpdated Scores:")
-    print(quiz_scores)
-    print("=" * 30)
-"""
-
-# %%
-
-
-# %%
-
 
 
