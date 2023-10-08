@@ -37,6 +37,7 @@ def main():
     pygame.display.set_caption("DISCO LION")
 
     # Create a linked list to store names
+    input_text = ""
 
     # GiGi's Variables
     gigiIndex = 0
@@ -99,7 +100,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                runningTwo= False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if current_screen == "main":
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -114,6 +115,7 @@ def main():
                             current_screen = "settings"
                         elif quitRect.collidepoint(event.pos):
                             runningTwo = False
+
 
         # Back button dimensions
         rectWidth = 100
@@ -131,13 +133,40 @@ def main():
             # Draws the rectangle to the screen
             pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
 
-            # Draws the back button
-            pygame.draw.rect(screen, (0, 0, 0), ())
+            #Draw leave button
+            leaveSettingsSurface = font.render("LEAVE", True, (0,0,0))
+            leaveSettingsRect = leaveSettingsSurface.get_rect()
+            leaveSettingsRect.center = (50, 25)
+            screen.blit(leaveSettingsSurface, leaveSettingsRect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if leaveSettingsRect.collidepoint(event.pos):
+                        current_screen = "main"
+
+
         elif current_screen == "leaderboard":
-            pass
-        elif current_screen == "game":
             screen.fill(WHITE)
 
+            screen.fill(LIGHT_BLUE)
+
+            pygame.draw.rect(screen, (255, 255, 255), (rect_x, rect_y, rectWidth, rectHeight))
+
+            #Draw leave button
+            leaveLeaderSurface = font.render("LEAVE", True, (0,0,0))
+            leaveLeaderRect = leaveLeaderSurface.get_rect()
+            leaveLeaderRect.center = (50, 25)
+            screen.blit(leaveLeaderSurface, leaveLeaderRect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    runningTwo = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if leaveLeaderRect.collidepoint(event.pos):
+                        current_screen = "main"
+        elif current_screen == "name":
             # Ask for user name
             nameText = "Type your name: "
             nameSurface = font.render(settingsText, True, (0,0,0))
@@ -145,17 +174,17 @@ def main():
             nameRect.center = (WIDTH // 2, 350)
             screen.blit(nameSurface, nameRect)
 
-            runningThree = True
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         user_name = input_text
                         input_text = ""
-                        
-            
-
+                        current_screen = "game"
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_text = input_text[:-1]
+                    else:
+                        input_text += event.unicode
+        elif current_screen == "game":
             screen.fill(WHITE)
 
             # Game Variables
