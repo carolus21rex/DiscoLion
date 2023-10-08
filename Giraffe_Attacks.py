@@ -83,19 +83,6 @@ def Gigi_Puzzle(type, lowest=0, highest=10):
 
 
 # %%
-#Test calls
-
-
-#Quiz = Gigi_Puzzle('Number',0,9)
-#print(Quiz)
-#Quiz = Gigi_Puzzle('Count',0,20)
-#print(Quiz)
-#Quiz = Gigi_Puzzle('Add',0,15)
-#print(Quiz)                   
-#Quiz = Gigi_Puzzle('Subtract',0,15)
-#print(Quiz)
-
-# %%
 # Initialize a global dictionary to store scores for each quiz type
 quiz_scores = {
     'Number': [],
@@ -103,6 +90,13 @@ quiz_scores = {
     'Add': [],
     'Subtract': []
 }
+
+quiz_scores['Number'] = []
+quiz_scores['Count'] = []
+quiz_scores['Add'] = []
+quiz_scores['Subtract'] = []
+
+print(quiz_scores)
 
 # %%
 import random
@@ -127,9 +121,9 @@ def Gigi_Event():
     quiz_types = ['Number', 'Count', 'Add', 'Subtract']
 
     # Randomly choose a quiz type
-    quiz_type = random.choice(quiz_types)
+    # quiz_type = random.choice(quiz_types)
 
-    # quiz_type = select_puzzle_type(quiz_scores) - Advanced version
+    quiz_type = select_puzzle_type() # Advanced version
 
     # Call the respective puzzle function based on the chosen quiz type
     if quiz_type == "Number":
@@ -137,7 +131,7 @@ def Gigi_Event():
         highest= 10
     elif quiz_type == 'Count':
         lowest = 0
-        highest = 20
+        highest = 5
     elif quiz_type == 'Add':
         lowest = 0
         highest = 20
@@ -150,38 +144,90 @@ def Gigi_Event():
     return puzzle
 
 # %%
-#puzzle = Gigi_Event()
-#print(puzzle)
-
-# %%
 def Puzzle_Result(puzzle_info):
-    puzzle_type = puzzle_info["puzzle_type"]
-    answer = puzzle_info["answer"]
-    user_selection = puzzle_info["user_selection"]
+    puzzle_type = puzzle_info["Type"]
+    answer = puzzle_info["Answer"]
+    user_selection = puzzle_info["Selection"]
     
     # Calculate is_correct based on answer and user_selection
     is_correct = answer == user_selection
     
     # Update the scores based on the result
-    if is_correct:
-        quiz_scores[puzzle_type]["wins"] += 1
-    else:
-        quiz_scores[puzzle_type]["losses"] += 1
+    scores = quiz_scores[puzzle_type]
+    scores.append(is_correct)
+
+    # Keep only the last 10 results
+    if len(scores) > 10:
+        scores.pop(0)  # Remove the oldest score
 
 # %%
-def select_puzzle_type(quiz_scores):
-    # Logic to select the puzzle type based on scores
-    # Implement your own logic here
+import random
 
-    # For example, select the puzzle type with the lowest score
-    min_score = float("inf")
+def select_puzzle_type():
+    # Calculate the percentage of wins for each type
+    total_wins = {type: sum(quiz_scores[type][-10:]) for type in quiz_scores}
+
+    # Determine the selected type based on cascading random chance
     selected_type = None
-    for quiz_type, scores in quiz_scores.items():
-        win_ratio = scores["wins"] / (scores["wins"] + scores["losses"]) if scores["losses"] > 0 else 1
-        if win_ratio < min_score:
-            selected_type = quiz_type
-            min_score = win_ratio
+
+    # Start with "Number" type
+    if random.random() < (1 - total_wins.get("Number", 0) / 10):
+        selected_type = "Number"
+    else:
+        # If "Number" is not selected, try "Count" type
+        if random.random() < (1 - total_wins.get("Count", 0) / 10):
+            selected_type = "Count"
+        else:
+            # If "Count" is not selected, try "Add" type
+            if random.random() < (1 - total_wins.get("Add", 0) / 10):
+                selected_type = "Add"
+            else:
+                # If none of the above types are selected, choose "Subtract" type
+                if random.random() < (1 - total_wins.get("Subtract", 0) / 10):
+                    selected_type = "Subtract"
+                else:
+                    # If still none of the types are selected, choose randomly
+                    selected_type = random.choice(["Number", "Count", "Add", "Subtract"])
 
     return selected_type
+
+
+# %%
+"""
+# Gigi Simulation
+import random
+
+# Simulated sequence of Gigi events and puzzle results
+for i in range(50):
+    # Simulate Gigi event
+    puzzle = Gigi_Event()
+    print(i, puzzle)
+
+    # Simulate puzzle result (80% success rate)
+    is_correct = random.random() < 0.8
+
+    # Create puzzle_info dictionary
+    puzzle_info = {
+        'Type': puzzle["Type"],
+        'Question': puzzle["Question"],
+        'Answer': puzzle["Answer"],
+        'Selection': puzzle["Answer"] if is_correct else puzzle["Answer"] + 1
+    }
+    print(puzzle_info)
+
+    # Pass puzzle_info to Puzzle_Result
+    Puzzle_Result(puzzle_info)
+
+    # Print updated scores
+    print("\nUpdated Scores:")
+    print(quiz_scores)
+    print("=" * 30)
+"""
+
+# %%
+
+
+# %%
+
 
 
