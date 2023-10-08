@@ -423,8 +423,12 @@ def main():
                 background = Image.open(background_path)
                 composite_image = GE.placeLion(background, 800, 370)
                 composite_image = GE.placeGiGi(composite_image, gigiIndex - 170, 270)
-                if gigiDict is not None:
+                if gigiMove == 2:
                     composite_image = GE.question(composite_image, gigiDict['Question'])
+                    if gigiDict["Type"] != "Counting":
+                        composite_image = GE.answers(composite_image, gigiDict['Options'])
+                    else:
+                        print("everybody died. the end.")
 
                 # Convert the composite image to a Pygame surface
                 bg = pygame.image.fromstring(composite_image.tobytes(), composite_image.size, composite_image.mode)
@@ -528,14 +532,12 @@ def main():
                         gigiIndex += 1
                     if gigiIndex == 200:
                         gigiMove = 0
-                #print(gigiMove)
                 if gigiMove == 0:
                     gigiDict = GG.Gigi_Event()
 
                     # do quiz
 
                     gigiMove = 2
-                    #print(gigiMove)
                 if gigiMove == -1:
                     if gigiIndex > 0:
                         gigiIndex += 1
